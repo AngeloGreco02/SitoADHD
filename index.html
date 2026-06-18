@@ -3,18 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cognitive Overload Engine - Empathy Driven Build</title>
+  <title>Cognitive Overload Engine - Active Voice Build</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body, html { width: 100%; height: 100%; overflow: hidden; background: #07080c; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     #glitch-root { width: 100vw; height: 100vh; position: relative; overflow: hidden; cursor: default; user-select: none; }
     
-    /* Griglia desktop disordinato reale */
+    /* Griglia desktop disordinato */
     .desktop-bg { position: absolute; inset: 0; background-color: #0c0d14; background-size: 40px 40px; display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); grid-template-rows: repeat(auto-fill, minmax(100px, 1fr)); gap: 20px; padding: 30px; z-index: 0; }
-    
-    /* RIPRISTINO: Grafica e visibilità delle icone spazzatura del desktop */
     .bg-icon { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; opacity: 0.35; padding: 6px; border-radius: 6px; z-index: 1; }
-    .bg-icon-visual { width: 28px; height: 28px; margin-bottom: 4px; position: relative; }
+    .bg-icon-visual { width: 24px; height: 24px; margin-bottom: 4px; position: relative; }
     .bg-icon-visual.folder { background: #e0a96d; border-radius: 3px 5px 3px 3px; }
     .bg-icon-visual.folder::before { content: ''; position: absolute; top: -3px; left: 0; width: 10px; height: 3px; background: #e0a96d; }
     .bg-icon-visual.pdf { background: #ef5350; border-radius: 2px; }
@@ -23,14 +21,13 @@
 
     /* HUD Riserva */
     .hud-container { position: absolute; top: 20px; left: 20px; z-index: 150; background: rgba(10, 11, 16, 0.95); padding: 14px 20px; border-radius: 8px; border: 0.5px solid rgba(100, 255, 100, 0.15); min-width: 260px; }
-    #glitch-root.hyperfocus .hud-container { border-color: #28c840; box-shadow: 0 0 15px rgba(40,200,80,0.2); }
     .hud-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
     .hud-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: rgba(100, 255, 100, 0.8); font-family: monospace; }
     .hud-value { font-size: 11px; font-family: monospace; color: #fff; }
     .focus-bar-bg { width: 100%; height: 6px; background: rgba(255, 255, 255, 0.08); border-radius: 3px; overflow: hidden; }
     .focus-bar-fill { width: 100%; height: 100%; background: #28c840; transition: width 0.2s linear; }
 
-    /* Finestre con Codice Colore Semantico */
+    /* Finestre con Codice Colore */
     .win { position: absolute; background: rgba(14, 15, 23, 0.98); border-radius: 8px; box-shadow: 0 15px 45px rgba(0,0,0,0.6); z-index: 10; cursor: pointer; transition: left 1.2s cubic-bezier(0.1, 0.8, 0.3, 1), top 1.2s cubic-bezier(0.1, 0.8, 0.3, 1), border-color 0.2s; }
     .win-title { display: flex; align-items: center; gap: 6px; padding: 10px 12px; border-bottom: 0.5px solid rgba(255,255,255,0.08); font-size: 11px; font-family: monospace; }
     .win-dot { width: 7px; height: 7px; border-radius: 50%; background: #eceff1; }
@@ -39,27 +36,26 @@
     .win-body .main { font-size: 13px; font-weight: 500; color: #fff; }
     .win-cta { margin-top: 10px; padding: 6px; font-size: 11px; border-radius: 4px; text-align: center; font-family: monospace; }
 
-    /* Classi Colore Specifiche */
     .win.err-red { border: 0.5px solid rgba(255, 95, 87, 0.4); }
     .win.err-red .win-title { color: #ff5f57; }
     .win.err-red .win-cta { background: rgba(255, 95, 87, 0.08); border: 0.5px solid rgba(255, 95, 87, 0.3); color: #ff5f57; }
-
     .win.social-blue { border: 0.5px solid rgba(66, 165, 245, 0.4); }
     .win.social-blue .win-title { color: #42a5f5; }
     .win.social-blue .win-cta { background: rgba(66, 165, 245, 0.08); border: 0.5px solid rgba(66, 165, 245, 0.3); color: #42a5f5; }
-
     .win.time-yellow { border: 0.5px solid rgba(254, 188, 46, 0.4); }
     .win.time-yellow .win-title { color: #febc2e; }
-    .win.time-yellow .win-cta { background: rgba(254, 188, 46, 0.08); border: 0.5px solid rgba(254, 188, 46, 0.3); color: #febc2e; }
-
+    .win-cta { background: rgba(254, 188, 46, 0.08); border: 0.5px solid rgba(254, 188, 46, 0.3); color: #febc2e; }
     .win.freeze-purple { border: 0.5px solid rgba(171, 71, 188, 0.4); }
     .win.freeze-purple .win-title { color: #ab47bc; }
     .win.freeze-purple .win-cta { background: rgba(171, 71, 188, 0.08); border: 0.5px solid rgba(171, 71, 188, 0.3); color: #ab47bc; }
 
-    /* Stack Chiamate */
+    /* Stack Chiamate Concorrenti */
     .incoming-call-box { width: 340px; background: #141520; border: 1px solid #febc2e; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.8); z-index: 110; padding: 16px; }
+    /* Stato modificato quando la chiamata è attiva a schermo */
+    .incoming-call-box.active-call { border-color: #28c840; background: #0e1410; }
     .call-info { display: flex; align-items: center; gap: 12px; }
-    .call-avatar { width: 36px; height: 36px; background: #febc2e; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .call-avatar { width: 36px; height: 36px; background: #febc2e; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background 0.3s; }
+    .incoming-call-box.active-call .call-avatar { background: #28c840; }
     .call-actions { display: flex; gap: 10px; margin-top: 12px; }
     .call-btn { flex: 1; padding: 8px; border: none; border-radius: 6px; font-family: monospace; cursor: pointer; font-weight: bold; color: #fff; text-align: center; }
 
@@ -69,28 +65,23 @@
     #glitch-root.panic .panic-alarm-banner { animation: blinkAlarm 0.4s infinite; }
     @keyframes blinkAlarm { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
 
-    /* Overlay Modali Risorse */
+    /* Modali */
     .overlay { position: absolute; inset: 0; background: rgba(4,4,6,0.96); z-index: 200; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s ease; }
     .overlay.active { display: flex; opacity: 1; pointer-events: all; }
     .resource-card { background: #0e0e14; border-radius: 12px; padding: 32px; max-width: 440px; width: 92%; position: relative; }
-    
     .resource-card.card-red { border: 1px solid #ff5f57; }
     .resource-card.card-blue { border: 1px solid #42a5f5; }
     .resource-card.card-yellow { border: 1px solid #febc2e; }
     .resource-card.card-purple { border: 1px solid #ab47bc; }
-    
     .resource-tag { font-size: 10px; font-family: monospace; padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 12px; font-weight: bold; }
     .resource-title { font-size: 17px; color: #fff; margin-bottom: 10px; font-weight: bold; }
     .resource-body { font-size: 13px; color: #bcbfca; line-height: 1.6; margin-bottom: 20px; }
-    
     .resource-link { display: block; padding: 12px; border-radius: 6px; font-size: 12px; font-family: monospace; text-align: center; text-decoration: none; font-weight: bold; }
     .card-red .resource-link { background: rgba(255,95,87,0.1); border: 1px solid #ff5f57; color: #ff5f57; }
     .card-blue .resource-link { background: rgba(66,165,245,0.1); border: 1px solid #42a5f5; color: #42a5f5; }
     .card-yellow .resource-link { background: rgba(254,188,46,0.1); border: 1px solid #febc2e; color: #febc2e; }
     .card-purple .resource-link { background: rgba(171,71,188,0.1); border: 1px solid #ab47bc; color: #ab47bc; }
-    
     .close-btn { position: absolute; top: 18px; right: 18px; font-size: 22px; color: rgba(255,255,255,0.3); cursor: pointer; background: none; border: none; }
-    .close-btn:hover { color: #fff; }
 
     .glitch-bar { position: absolute; left: 0; right: 0; height: 3px; background: rgba(220,80,80,0.35); z-index: 300; pointer-events: none; display: none; }
     .taskbar { position: absolute; bottom: 0; left: 0; right: 0; height: 40px; background: #090a0e; border-top: 0.5px solid rgba(100,200,100,0.12); display: flex; align-items: center; padding: 0 16px; z-index: 100; }
@@ -155,45 +146,10 @@
   <div class="hint" id="hint-text">clicca su una finestra — niente si aprirà dove ti aspetti</div>
   <div class="taskbar"><span class="taskbar-time" id="tclock">--:--</span></div>
 
-  <div class="overlay" id="ov-error">
-    <div class="resource-card card-red">
-      <button class="close-btn" onclick="closeOverlay('ov-error')">×</button>
-      <div class="resource-tag" style="background:rgba(255,95,87,0.15); color:#ff5f57;">executive function</div>
-      <div class="resource-title">Hai cliccato sull'errore di sistema — non si è aperta l'assistenza tecnica</div>
-      <div class="resource-body">Questa sensazione di blocco ha un nome: difficoltà di executive function. È una delle caratteristiche centrali dell'ADHD e coinvolge pianificazione, avvio dei compiti e gestione delle priorità.</div>
-      <a class="resource-link" target="_blank" href="https://chadd.org/about-adhd/executive-function-skills/">→ guida all'executive function (CHADD)</a>
-    </div>
-  </div>
-
-  <div class="overlay" id="ov-slack">
-    <div class="resource-card card-blue">
-      <button class="close-btn" onclick="closeOverlay('ov-slack')">×</button>
-      <div class="resource-tag" style="background:rgba(66,165,245,0.15); color:#42a5f5;">comunità di supporto</div>
-      <div class="resource-title">Hai cliccato su Slack — ti ha portato altrove</div>
-      <div class="resource-body">Rispondere ai messaggi richiede più energie del previsto? Non sei solo. Esistono comunità di persone che condividono questa esperienza e strategie concrete per gestire la comunicazione asincrona.</div>
-      <a class="resource-link" target="_blank" href="https://www.reddit.com/r/ADHD/">→ r/ADHD — forum di supporto</a>
-    </div>
-  </div>
-
-  <div class="overlay" id="ov-cal">
-    <div class="resource-card card-yellow">
-      <button class="close-btn" onclick="closeOverlay('ov-cal')">×</button>
-      <div class="resource-tag" style="background:rgba(254,188,46,0.15); color:#febc2e;">gestione delle scadenze</div>
-      <div class="resource-title">Hai cliccato sul promemoria — non si è aperto il calendario</div>
-      <div class="resource-body">La "cecità temporale" — difficoltà a percepire il tempo che passa — è comune nell'ADHD. Non è pigrizia. È un modo diverso di elaborare le scadenze. Esistono tecniche specifiche che funzionano.</div>
-      <a class="resource-link" target="_blank" href="https://www.additudemag.com/time-management-strategies-adhd-adults/">→ gestione del tempo con ADHD</a>
-    </div>
-  </div>
-
-  <div class="overlay" id="ov-mail">
-    <div class="resource-card card-purple">
-      <button class="close-btn" onclick="closeOverlay('ov-mail')">×</button>
-      <div class="resource-tag" style="background:rgba(171,71,188,0.15); color:#ab47bc;">paralisi da avvio</div>
-      <div class="resource-title">Hai cliccato su Gmail — non si è aperta la posta</div>
-      <div class="resource-body">L'inbox non letta non è trascuratezza. La paralisi da avvio — difficoltà a iniziare un compito nonostante l'intenzione — è uno dei sintomi più invalidanti e meno compresi dell'ADHD.</div>
-      <a class="resource-link" target="_blank" href="https://www.additudemag.com/adhd-paralysis-freeze-stuck/">→ ADHD paralysis: come sbloccarsi</a>
-    </div>
-  </div>
+  <div class="overlay" id="ov-error"><div class="resource-card card-red"><button class="close-btn" onclick="closeOverlay('ov-error')">×</button><div class="resource-tag" style="background:rgba(255,95,87,0.15); color:#ff5f57;">executive function</div><div class="resource-title">Difficoltà di Executive Function</div><div class="resource-body">Questa sensazione di blocco coinvolge la pianificazione e l'avvio dei compiti.</div><a class="resource-link" target="_blank" href="https://chadd.org/about-adhd/executive-function-skills/">→ Guida CHADD</a></div></div>
+  <div class="overlay" id="ov-slack"><div class="resource-card card-blue"><button class="close-btn" onclick="closeOverlay('ov-slack')">×</button><div class="resource-tag" style="background:rgba(66,165,245,0.15); color:#42a5f5;">comunità di supporto</div><div class="resource-title">Gestione Comunicazione Asincrona</div><div class="resource-body">Rispondere ai messaggi richiede energie elevate. Esistono comunità di supporto.</div><a class="resource-link" target="_blank" href="https://www.reddit.com/r/ADHD/">→ Forum Supporto</a></div></div>
+  <div class="overlay" id="ov-cal"><div class="resource-card card-yellow"><button class="close-btn" onclick="closeOverlay('ov-cal')">×</button><div class="resource-tag" style="background:rgba(254,188,46,0.15); color:#febc2e;">gestione delle scadenze</div><div class="resource-title">Cecità Temporale</div><div class="resource-body">La difficoltà a percepire il tempo che passa è tipica nell'ADHD.</div><a class="resource-link" target="_blank" href="https://www.additudemag.com/time-management-strategies-adhd-adults/">→ Strategie Tempo</a></div></div>
+  <div class="overlay" id="ov-mail"><div class="resource-card card-purple"><button class="close-btn" onclick="closeOverlay('ov-mail')">×</button><div class="resource-tag" style="background:rgba(171,71,188,0.15); color:#ab47bc;">paralisi da avvio</div><div class="resource-title">Task Initiation Freeze</div><div class="resource-body">La difficoltà a iniziare un compito nonostante l'intenzione reale.</div><a class="resource-link" target="_blank" href="https://www.additudemag.com/adhd-paralysis-freeze-stuck/">→ Sbloccarsi</a></div></div>
 </div>
 
 <script>
@@ -206,7 +162,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const hint = document.getElementById('hint-text');
   const toastContainer = document.getElementById('toast-container');
 
-  let telemetry = { subTasks: 0, falseClicks: 0, hyperStates: 0, startTime: Date.now(), focusHistory: [] };
   let focusScore = 100;
   let audioCtx = null;
   let clickCount = 0; 
@@ -215,19 +170,23 @@ document.addEventListener('DOMContentLoaded', () => {
   let driftIntervals = {};
   let glitchFrequenceMultiplier = 1;
 
-  const callers = ["Ufficio", "Sconosciuto", "Mamma", "Banca"];
+  const callers = ["Ufficio", "Capo Progetto", "Mamma", "Direzione", "Risorse Umane"];
+  // Frasi vocali ansiogene per la Web Speech API
+  const voicePhrases = [
+    "Attenzione, serve subito la tua risposta sul file condiviso.",
+    "Puoi collegarti un secondo in chiamata? Dobbiamo rifare la pianificazione.",
+    "Hai visto la scadenza sul calendario? Siamo già in ritardo.",
+    "Scusa il disturbo, hai cinque minuti adesso per risolvere un blocco?"
+  ];
   const wins = ['win-error', 'win-slack', 'win-cal', 'win-mail'];
 
-  // RISOLUZIONE: Popolamento icone visibili (Cartelle e PDF alternati con classi grafiche)
+  // Popolamento icone spazzatura sul desktop
   for (let i = 0; i < 45; i++) {
     if (Math.random() > 0.4) {
       const isFolder = Math.random() > 0.5;
       const icon = document.createElement('div');
       icon.className = 'bg-icon';
-      icon.innerHTML = `
-        <div class="bg-icon-visual ${isFolder ? 'folder' : 'pdf'}"></div>
-        <div class="bg-icon-text">${isFolder ? 'Cartella_Progetto' : 'Bozza_Codice'}_${i}</div>
-      `;
+      icon.innerHTML = `<div class="bg-icon-visual ${isFolder ? 'folder' : 'pdf'}"></div><div class="bg-icon-text">${isFolder ? 'Cartella' : 'Bozza'}_${i}.sys</div>`;
       desktopGrid.appendChild(icon);
     } else {
       desktopGrid.appendChild(document.createElement('div'));
@@ -294,9 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
   window.closeOverlay = function(id) {
     document.getElementById(id).classList.remove('active');
     clickCount++;
-    if (clickCount >= 2) {
-      startChaosMode();
-    }
+    if (clickCount >= 2) startChaosMode();
   };
 
   document.getElementById('win-error').addEventListener('click', () => openOverlay('ov-error'));
@@ -304,16 +261,14 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('win-cal').addEventListener('click', () => openOverlay('ov-cal'));
   document.getElementById('win-mail').addEventListener('click', () => openOverlay('ov-mail'));
 
-  // CORREZIONE CRASH: Cambiato 'element' orfano con 'el' corretto all'interno del calcolo vettoriale maxY
   wins.forEach(id => {
     const el = document.getElementById(id);
     if (!el) return;
-    
     el.addEventListener('mouseenter', () => {
       if (clickCount >= 1 && clickCount < 2) { 
         hoverTimers[id] = setTimeout(() => {
           const maxX = window.innerWidth - el.offsetWidth - 30;
-          const maxY = window.innerHeight - el.offsetHeight - 60; // Risolto errore 'element'
+          const maxY = window.innerHeight - el.offsetHeight - 60;
           el.style.left = Math.random() * maxX + 'px';
           el.style.top = Math.random() * maxY + 'px';
           playSynthTone(220, 0.05, 'sawtooth');
@@ -321,10 +276,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1800); 
       }
     });
-
-    el.addEventListener('mouseleave', () => {
-      if (hoverTimers[id]) clearTimeout(hoverTimers[id]);
-    });
+    el.addEventListener('mouseleave', () => { if (hoverTimers[id]) clearTimeout(hoverTimers[id]); });
   });
 
   function createAudioRinger() {
@@ -336,7 +288,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return ringInterval;
   }
 
-  // MODIFICA RICHIESTA: Intervallo alzato a 5 secondi esatti (5000ms)
+  // Loop delle chiamate a cascata (5 secondi)
   setInterval(() => {
     if (focusScore <= 0 || document.querySelectorAll('.incoming-call-box').length > 6) return;
     initAudio();
@@ -346,34 +298,70 @@ document.addEventListener('DOMContentLoaded', () => {
     callElement.style.top = Math.random() * (window.innerHeight - 220) + 'px';
     
     callElement.innerHTML = `
-      <div class="win-title"><div class="win-dot" style="background:#febc2e"></div><span>Chiamata concorrente...</span></div>
+      <div class="win-title"><div class="win-dot" style="background:#febc2e"></div><span class="status-txt">Chiamata...</span></div>
       <div class="call-info">
         <div class="call-avatar">📞</div>
         <div style="font-family:monospace; color:#fff; font-size:12px;">
           <div style="font-weight:bold;">${callers[Math.floor(Math.random() * callers.length)]}</div>
-          <div style="color:rgba(255,255,255,0.5);">In ingresso...</div>
+          <div class="sub-txt" style="color:rgba(255,255,255,0.5);">In ingresso...</div>
         </div>
       </div>
       <div class="call-actions">
-        <button class="call-btn" style="background:#28c840;" data-action="accept">Rispondi</button>
-        <button class="call-btn" style="background:#ff5f57;" data-action="decline">Rifiuta</button>
+        <button class="call-btn btn-acc" style="background:#28c840;" data-action="accept">Rispondi</button>
+        <button class="call-btn btn-dec" style="background:#ff5f57;" data-action="decline">Rifiuta</button>
       </div>
     `;
 
     let currentRingerToken = createAudioRinger();
+
     callElement.addEventListener('click', (e) => {
       const action = e.target.getAttribute('data-action');
-      if (action) {
-        e.stopPropagation();
+      if (!action) return;
+      e.stopPropagation();
+
+      // RISOLUZIONE FUNZIONALITÀ: Se premi rispondi, la chiamata rimane e parla
+      if (action === 'accept') {
         clearInterval(currentRingerToken);
         activeRingersCount = Math.max(0, activeRingersCount - 1);
+        focusScore = Math.max(0, focusScore - 10); // Costo energetico
+
+        // Trasformazione grafica in chiamata attiva
+        callElement.classList.add('active-call');
+        callElement.querySelector('.status-txt').textContent = "In corso...";
+        callElement.querySelector('.sub-txt').textContent = "Connesso";
+        callElement.querySelector('.btn-acc').style.display = 'none';
+        callElement.querySelector('.btn-dec').textContent = "Chiudi Chiamata";
+        callElement.querySelector('.btn-dec').setAttribute('data-action', 'hangup');
+
+        // INTEGRAZIONE WEB SPEECH API: Il computer parla riproducendo una voce sintetica
+        if ('speechSynthesis' in window) {
+          const randomPhrase = voicePhrases[Math.floor(Math.random() * voicePhrases.length)];
+          const utterance = new SpeechSynthesisUtterance(randomPhrase);
+          utterance.lang = 'it-IT';
+          utterance.rate = 1.0; // Velocità naturale
+          
+          // Quando la voce finisce di parlare, la finestra si chiude automaticamente liberando spazio
+          utterance.onend = () => {
+            callElement.remove();
+          };
+          window.speechSynthesis.speak(utterance);
+        } else {
+          // Fallback se la sintesi vocale non è supportata dal browser client
+          setTimeout(() => callElement.remove(), 4000);
+        }
+      } 
+      // Se si rifiuta o si appende manualmente la chiamata attiva
+      else if (action === 'decline' || action === 'hangup') {
+        clearInterval(currentRingerToken);
+        if (action === 'decline') activeRingersCount = Math.max(0, activeRingersCount - 1);
+        if ('speechSynthesis' in window) window.speechSynthesis.cancel(); // Ferma la voce se attiva
         callElement.remove();
       }
     });
 
     root.appendChild(callElement);
-    if (clickCount >= 2) makeWindowDrift(callElement, 'call-' + Date.now());
-  }, 5000); // 5000ms di delay per lo spawn
+    makeWindowDrift(callElement, 'call-' + Date.now());
+  }, 5000);
 
   // Consumo progressivo riserva energetica
   setInterval(() => {
@@ -381,7 +369,6 @@ document.addEventListener('DOMContentLoaded', () => {
       focusScore = Math.max(0, focusScore - 0.4);
       focusFill.style.width = focusScore + '%';
       hudVal.textContent = Math.round(focusScore) + '%';
-      
       if (focusScore < 30 && !root.classList.contains('panic')) root.classList.add('panic');
       if (focusScore <= 0) document.getElementById('analytics-screen').style.display = 'flex';
     }
