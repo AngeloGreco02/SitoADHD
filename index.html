@@ -3,65 +3,88 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cognitive Overload Engine - Total Chaos Build</title>
+  <title>Cognitive Overload Engine - Real Messy Desktop</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body, html { width: 100%; height: 100%; overflow: hidden; background: #07080c; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body, html { width: 100%; height: 100%; overflow: hidden; background: #111218; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     #glitch-root { width: 100vw; height: 100vh; position: relative; overflow: hidden; cursor: default; user-select: none; }
     
-    /* Griglia desktop disordinato */
-    .desktop-bg { position: absolute; inset: 0; background-color: #0f1118; background-image: radial-gradient(rgba(255,255,255,0.02) 1px, transparent 0); background-size: 30px 30px; display: grid; grid-template-columns: repeat(auto-fill, minmax(95px, 1fr)); grid-template-rows: repeat(auto-fill, minmax(95px, 1fr)); gap: 15px; padding: 25px; z-index: 0; transition: all 0.4s ease; }
-    #glitch-root.hyperfocus .desktop-bg { background-color: #051408; filter: blur(0px) !important; opacity: 1 !important; }
-    #glitch-root.freeze .desktop-bg { opacity: 0.1; filter: blur(2px); }
+    /* Griglia del desktop disordinato reale */
+    .desktop-bg { 
+      position: absolute; inset: 0; 
+      background-color: #161822; 
+      background-image: radial-gradient(rgba(255,255,255,0.01) 1px, transparent 0); 
+      background-size: 40px 40px; 
+      display: grid; 
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); 
+      grid-template-rows: repeat(auto-fill, minmax(100px, 1fr)); 
+      gap: 20px; padding: 30px; z-index: 0; 
+    }
 
-    /* Icone Spazzatura */
-    .bg-icon { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; opacity: 0.35; cursor: pointer; padding: 4px; border-radius: 6px; z-index: 1; }
-    .bg-icon:active { background: rgba(220, 80, 80, 0.2); opacity: 0.7; }
-    .bg-icon-visual { width: 24px; height: 24px; margin-bottom: 4px; background: #3a3f50; border-radius: 2px; border: 1px solid rgba(255,255,255,0.1); }
-    .bg-icon-text { font-size: 9px; color: #8e93a2; font-family: monospace; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; }
+    /* Stile delle icone grafiche del Desktop */
+    .bg-icon { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; opacity: 0.4; cursor: pointer; padding: 6px; border-radius: 6px; z-index: 1; transition: opacity 0.2s; }
+    .bg-icon:hover { opacity: 0.7; background: rgba(255,255,255,0.03); }
+    .bg-icon:active { background: rgba(220, 80, 80, 0.2); opacity: 0.9; }
+    
+    /* Icone vettoriali simulate in CSS Puro */
+    .bg-icon-visual { width: 32px; height: 32px; margin-bottom: 6px; position: relative; }
+    
+    /* Cartella Gialla */
+    .bg-icon-visual.folder { background: #e0a96d; border-radius: 3px 6px 3px 3px; }
+    .bg-icon-visual.folder::before { content: ''; position: absolute; top: -4px; left: 0; width: 12px; height: 4px; background: #e0a96d; border-radius: 2px 2px 0 0; }
+    
+    /* Documento PDF Rosso */
+    .bg-icon-visual.pdf { background: #ef5350; border-radius: 2px; }
+    .bg-icon-visual.pdf::before { content: 'PDF'; position: absolute; bottom: 2px; left: 3px; font-size: 8px; font-family: monospace; color: #fff; font-weight: bold; }
+    .bg-icon-visual.pdf::after { content: ''; position: absolute; top: 0; right: 0; width: 8px; height: 8px; background: #161822; border-bottom-left-radius: 2px; }
+
+    /* Foglio Excel Verde */
+    .bg-icon-visual.excel { background: #26a69a; border-radius: 2px; }
+    .bg-icon-visual.excel::before { content: 'XLS'; position: absolute; bottom: 2px; left: 3px; font-size: 8px; font-family: monospace; color: #fff; font-weight: bold; }
+
+    /* Immagine PNG Blu */
+    .bg-icon-visual.image { background: #42a5f5; border-radius: 2px; }
+    .bg-icon-visual.image::before { content: 'PNG'; position: absolute; bottom: 2px; left: 3px; font-size: 8px; font-family: monospace; color: #fff; font-weight: bold; }
+
+    .bg-icon-text { font-size: 9.5px; color: #a0a5b5; font-family: monospace; margin-top: 2px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; width: 100%; word-break: break-all; }
 
     /* HUD */
-    .hud-container { position: absolute; top: 20px; left: 20px; z-index: 150; background: rgba(10, 11, 16, 0.95); padding: 14px 20px; border-radius: 8px; border: 0.5px solid rgba(100, 255, 100, 0.15); min-width: 260px; transition: border-color 0.3s; }
-    #glitch-root.hyperfocus .hud-container { border-color: #28c840; box-shadow: 0 0 15px rgba(40,200,80,0.2); }
+    .hud-container { position: absolute; top: 20px; left: 20px; z-index: 150; background: rgba(10, 11, 16, 0.95); padding: 14px 20px; border-radius: 8px; border: 0.5px solid rgba(100, 255, 100, 0.15); min-width: 260px; }
     .hud-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
     .hud-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: rgba(100, 255, 100, 0.8); font-family: monospace; }
     .hud-value { font-size: 11px; font-family: monospace; color: #fff; }
     .focus-bar-bg { width: 100%; height: 6px; background: rgba(255, 255, 255, 0.08); border-radius: 3px; overflow: hidden; }
     .focus-bar-fill { width: 100%; height: 100%; background: #28c840; transition: width 0.2s linear; }
 
-    /* Schede fluttuanti (Aggiunto transition fluido per i movimenti impazziti) */
-    .win { position: absolute; background: rgba(15, 16, 24, 0.97); border: 0.5px solid rgba(100,200,100,0.2); border-radius: 8px; box-shadow: 0 15px 45px rgba(0,0,0,0.6); z-index: 10; cursor: pointer; transition: left 1.2s cubic-bezier(0.1, 0.8, 0.3, 1), top 1.2s cubic-bezier(0.1, 0.8, 0.3, 1), border-color 0.2s; }
-    .win:hover { border-color: rgba(100,200,100,0.5); z-index: 40; }
+    /* Schede fluttuanti e impazzite */
+    .win { position: absolute; background: rgba(15, 16, 24, 0.97); border: 0.5px solid rgba(100,200,100,0.2); border-radius: 8px; box-shadow: 0 15px 45px rgba(0,0,0,0.6); z-index: 10; cursor: pointer; transition: left 1.2s cubic-bezier(0.1, 0.8, 0.3, 1), top 1.2s cubic-bezier(0.1, 0.8, 0.3, 1); }
     .win-title { display: flex; align-items: center; gap: 6px; padding: 10px 12px; border-bottom: 0.5px solid rgba(100,200,100,0.12); font-size: 11px; color: rgba(160,200,160,0.7); font-family: monospace; }
     .win-dot { width: 7px; height: 7px; border-radius: 50%; background: #eceff1; }
     .win-body { padding: 14px; font-size: 12px; color: rgba(150,180,150,0.9); }
     .win-cta { margin-top: 10px; padding: 6px; font-size: 11px; background: rgba(40,200,80,0.06); border: 0.5px solid rgba(40,200,80,0.2); border-radius: 4px; color: #28c840; text-align: center; font-family: monospace; }
 
-    /* Finestra To-Do List */
     .todo-widget { width: 280px; left: 40px; top: 120px; }
     .todo-list { list-style: none; margin-top: 8px; display: flex; flex-direction: column; gap: 6px; max-height: 180px; overflow-y: auto; }
     .todo-item { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.02); padding: 6px 8px; border-radius: 4px; font-family: monospace; font-size: 11px; }
-    .todo-item input[type="checkbox"] { cursor: pointer; filter: hue-rotate(90deg); }
 
-    /* Overlay Chiamate Moderne (Anch'esso reso fluttuante) */
+    /* Overlay Chiamate */
     .incoming-call-overlay { position: absolute; top: 30px; left: 35vw; width: 360px; background: #141520; border: 1px solid #febc2e; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.8); z-index: 190; padding: 16px; display: none; transition: left 1.2s ease, top 1.2s ease; }
     .call-actions { display: flex; gap: 10px; margin-top: 10px; }
     .call-btn { flex: 1; padding: 8px; border: none; border-radius: 6px; font-family: monospace; cursor: pointer; font-weight: bold; color: #fff; }
     
     #toast-container { position: absolute; bottom: 60px; right: 20px; width: 320px; z-index: 180; display: flex; flex-direction: column; gap: 10px; }
-    .toast-notification { background: #181114; border: 0.5px solid #ff5f57; border-radius: 6px; padding: 12px; pointer-events: all; color: #fff; font-size: 12px; font-family: monospace; }
-
+    .toast-notification { background: #181114; border: 0.5px solid #ff5f57; border-radius: 6px; padding: 12px; color: #fff; font-size: 12px; font-family: monospace; }
     .panic-alarm-banner { position: absolute; inset: 0; border: 4px solid #ff5f57; pointer-events: none; z-index: 140; opacity: 0; }
     #glitch-root.panic .panic-alarm-banner { animation: blinkAlarm 0.4s infinite; }
     @keyframes blinkAlarm { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
 
     /* Dashboard Analytics */
-    .analytics-overlay { position: absolute; inset: 0; background: #090a10; z-index: 250; display: none; align-items: center; justify-content: center; color: #fff; padding: 20px; overflow-y: auto; }
-    .analytics-card { background: #121420; border: 1px solid rgba(100,255,100,0.2); border-radius: 12px; padding: 30px; max-width: 600px; width: 100%; box-shadow: 0 30px 70px rgba(0,0,0,0.9); }
+    .analytics-overlay { position: absolute; inset: 0; background: #090a10; z-index: 250; display: none; align-items: center; justify-content: center; color: #fff; padding: 20px; }
+    .analytics-card { background: #121420; border: 1px solid rgba(100,255,100,0.2); border-radius: 12px; padding: 30px; max-width: 600px; width: 100%; }
     .analytics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0; }
-    .stat-box { background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 0.5px solid rgba(255,255,255,0.05); }
-    .stat-val { font-size: 24px; font-weight: bold; color: #28c840; font-family: monospace; margin-top: 4px; }
-    .chart-container { height: 140px; display: flex; align-items: flex-end; gap: 15px; padding-top: 20px; border-left: 1px solid rgba(255,255,255,0.1); border-bottom: 1px solid rgba(255,255,255,0.1); position: relative; }
+    .stat-box { background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; }
+    .stat-val { font-size: 24px; font-weight: bold; color: #28c840; font-family: monospace; }
+    .chart-container { height: 140px; display: flex; align-items: flex-end; gap: 15px; border-left: 1px solid rgba(255,255,255,0.1); border-bottom: 1px solid rgba(255,255,255,0.1); position: relative; }
 
     .taskbar { position: absolute; bottom: 0; left: 0; right: 0; height: 40px; background: #090a0e; border-top: 0.5px solid rgba(100,200,100,0.12); display: flex; align-items: center; padding: 0 16px; z-index: 100; }
     .taskbar-time { margin-left: auto; font-size: 12px; color: rgba(140,180,140,0.4); font-family: monospace; }
@@ -77,7 +100,7 @@
 
   <div class="hud-container">
     <div class="hud-header">
-      <div class="hud-label" id="hud-text">Capacità Esecutiva</div>
+      <div class="hud-label">Capacità Esecutiva</div>
       <div class="hud-value" id="hud-val">100%</div>
     </div>
     <div class="focus-bar-bg">
@@ -88,7 +111,6 @@
   <div class="win todo-widget" id="todo-box">
     <div class="win-title"><div class="win-dot" style="background:#ff5f57"></div><span>Attività Urgenti</span></div>
     <div class="win-body">
-      <div style="font-size:10px; color:rgba(255,255,255,0.4); font-family:monospace;">Completa i task per vincere</div>
       <ul class="todo-list" id="todo-master-list">
         <li class="todo-item"><input type="checkbox"> <span>Scrivi Relazione Tecnica</span></li>
         <li class="todo-item"><input type="checkbox"> <span>Invia email a R.U.</span></li>
@@ -97,7 +119,7 @@
     </div>
   </div>
 
-  <div class="win" id="win-main" style="left: 45vw; top: 40vh; width: 280px;">
+  <div class="win" id="win-main" style="left: 42vw; top: 38vh; width: 290px;">
     <div class="win-title"><div class="win-dot" style="background:#28c840"></div><span>executive_hub.exe</span></div>
     <div class="win-body">
       <div class="main" style="font-weight:bold; color:#fff;">Risorsa Clinica</div>
@@ -121,7 +143,7 @@
   </div>
 
   <div id="toast-container"></div>
-  <div class="hint" id="hint-text">Rimani calmo. Le finestre si muovono da sole. Segui traiettorie lineari col mouse per l'Hyperfocus.</div>
+  <div class="hint" id="hint-text">Le finestre fluttuano in modo asincrono. Clicca la Risorsa Clinica per terminare.</div>
   <div class="taskbar"><span class="taskbar-time" id="tclock">--:--</span></div>
 
   <div class="analytics-overlay" id="analytics-screen">
@@ -133,9 +155,8 @@
         <div class="stat-box"><div>Iperfocus Raggiunti</div><div class="stat-val" id="stat-hyper">0</div></div>
         <div class="stat-box"><div>Tempo Sessione</div><div class="stat-val" id="stat-time">0s</div></div>
       </div>
-      <div style="font-size:11px; font-family:monospace; color:#28c840; margin-bottom:6px;">Grafico della Curva Attentiva</div>
       <div class="chart-container" id="chart-svg-target"></div>
-      <button onclick="window.location.reload()" style="margin-top:25px; width:100%; padding:12px; background:#28c840; border:none; border-radius:6px; color:#fff; font-family:monospace; font-weight:bold; cursor:pointer;">Riavvia Simulazione</button>
+      <button onclick="window.location.reload()" style="margin-top:25px; width:100%; padding:12px; background:#28c840; border:none; border-radius:6px; color:#fff; font-family:monospace; font-weight:bold; cursor:pointer;">Riavvia</button>
     </div>
   </div>
 </div>
@@ -147,7 +168,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const todoMasterList = document.getElementById('todo-master-list');
   const focusFill = document.getElementById('focus-fill');
   const hudVal = document.getElementById('hud-val');
-  const hudText = document.getElementById('hud-text');
   const callBox = document.getElementById('call-box');
   const chartTarget = document.getElementById('chart-svg-target');
   const toastContainer = document.getElementById('toast-container');
@@ -155,20 +175,29 @@ document.addEventListener('DOMContentLoaded', () => {
   let telemetry = { subTasks: 0, falseClicks: 0, hyperStates: 0, startTime: Date.now(), focusHistory: [] };
   let focusScore = 100;
   let audioCtx = null;
-  let ringInterval = null; // Gestione del ciclo ripetuto dello squillo acustico
+  let ringInterval = null;
   let linearPoints = [];
   let hyperfocusTimer = 0;
   let isHyperfocused = false;
 
-  const callers = ["Direzione", "Sconosciuto", "Mamma", "Banca (Importante)"];
-  const toastPool = ["Nuova mail di lavoro", "Hai dimenticato una scadenza?", "Aggiornamento di sistema pronto", "Notifica di messaggistica"];
+  const callers = ["Direzione", "Sconosciuto", "Mamma", "Banca"];
+  const toastPool = ["Nuova mail", "Scadenza imminente!", "Log di errore", "Notifica Chat"];
+  
+  // Tipi di icone con classi CSS abbinate per generare la grafica reale del desktop
+  const iconTypes = [
+    { class: "folder", name: "Nuova_Cartella_2" },
+    { class: "pdf", name: "report_medico.pdf" },
+    { class: "excel", name: "bilancio_2025.xls" },
+    { class: "image", name: "screenshot_43.png" }
+  ];
 
-  // Generazione icone sul desktop disordinato di sfondo
-  for (let i = 0; i < 40; i++) {
-    if (Math.random() > 0.5) {
+  // Generazione del desktop grafico disordinato
+  for (let i = 0; i < 45; i++) {
+    if (Math.random() > 0.4) {
+      const type = iconTypes[Math.floor(Math.random() * iconTypes.length)];
       const icon = document.createElement('div');
       icon.className = 'bg-icon';
-      icon.innerHTML = `<div class="bg-icon-visual"></div><div class="bg-icon-text">junk_file_${i}.txt</div>`;
+      icon.innerHTML = `<div class="bg-icon-visual ${type.class}"></div><div class="bg-icon-text">${type.name}</div>`;
       desktopGrid.appendChild(icon);
     } else {
       desktopGrid.appendChild(document.createElement('div'));
@@ -199,56 +228,44 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch(e) {}
   }
 
-  // Motore di movimento autonomo impazzito (Drifting Engine automatico all'avvio)
+  // Drifting Engine Autonomo (Movimento Caotico continuo)
   function makeWindowDrift(element) {
     setInterval(() => {
       if (focusScore <= 0 || isHyperfocused) return;
-      // Genera coordinate casuali mantenendo gli elementi all'interno del monitor dell'utente
       const maxX = window.innerWidth - element.offsetWidth - 30;
       const maxY = window.innerHeight - element.offsetHeight - 60;
-      
       element.style.left = Math.max(20, Math.random() * maxX) + 'px';
       element.style.top = Math.max(40, Math.random() * maxY) + 'px';
-    }, 2000 + Math.random() * 1000); // Cambia traiettoria ogni 2-3 secondi in modo asincrono
+    }, 2200 + Math.random() * 800);
   }
 
-  // Attiviamo il movimento autonomo su tutte le finestre principali
   makeWindowDrift(document.getElementById('todo-box'));
   makeWindowDrift(document.getElementById('win-main'));
   makeWindowDrift(callBox);
 
-  // Loop passivo del battito cardiaco di sottofondo
+  // Battito cardiaco acustico passivo
   setInterval(() => {
     if (focusScore <= 0 || !audioCtx) return;
     let isCritical = focusScore < 30;
     playSynthTone(isCritical ? 85 : 55, isCritical ? 0.1 : 0.18, 'sine', 0.03);
   }, 750);
 
-  // To-Do List dinamica fallimentare
   todoMasterList.addEventListener('change', (e) => {
     if (e.target && e.target.matches('input[type="checkbox"]')) {
-      e.preventDefault();
-      e.target.checked = false;
-      telemetry.subTasks++;
-      consumeFocus(5);
-      
+      e.preventDefault(); e.target.checked = false;
+      telemetry.subTasks++; consumeFocus(5);
       const newLi = document.createElement('li');
       newLi.className = 'todo-item';
-      newLi.style.paddingLeft = "15px";
-      newLi.style.borderLeft = "1px solid #ff5f57";
-      newLi.innerHTML = `<input type="checkbox"> <span style="color:#ff7f7f;">Sotto-compito generato</span>`;
+      newLi.innerHTML = `<input type="checkbox"> <span style="color:#ff7f7f;">Sotto-task concorrente</span>`;
       todoMasterList.insertBefore(newLi, e.target.closest('li').nextSibling);
     }
   });
 
-  // Calcolo dell'Hyperfocus tramite traiettorie pulite
   root.addEventListener('mousemove', (e) => {
     initAudio();
     if (isHyperfocused) return;
-    
     linearPoints.push({x: e.clientX, y: e.clientY});
     if (linearPoints.length > 10) linearPoints.shift();
-    
     if (linearPoints.length >= 4) {
       let isLinear = true;
       for (let i = 2; i < linearPoints.length; i++) {
@@ -259,29 +276,19 @@ document.addEventListener('DOMContentLoaded', () => {
       if (isLinear) {
         hyperfocusTimer += 30;
         if (hyperfocusTimer > 3000) triggerHyperfocus();
-      } else {
-        hyperfocusTimer = 0;
-      }
+      } else { hyperfocusTimer = 0; }
     }
   });
 
   function triggerHyperfocus() {
-    isHyperfocused = true;
-    telemetry.hyperStates++;
+    isHyperfocused = true; telemetry.hyperStates++;
     root.classList.add('hyperfocus');
-    hudText.textContent = "STATO DI IPERFOCUS ACCESO";
     focusScore = Math.min(100, focusScore + 35);
     toastContainer.innerHTML = '';
-    
-    setTimeout(() => {
-      isHyperfocused = false;
-      root.classList.remove('hyperfocus');
-      hudText.textContent = "Capacità Esecutiva";
-      hyperfocusTimer = 0;
-    }, 5000);
+    setTimeout(() => { isHyperfocused = false; root.classList.remove('hyperfocus'); hyperfocusTimer = 0; }, 5000);
   }
 
-  // Notifiche Toast laterali
+  // Notifiche asincrone toast
   setInterval(() => {
     if (focusScore <= 0 || isHyperfocused) return;
     const toast = document.createElement('div');
@@ -292,45 +299,34 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => toast.remove(), 4000);
   }, 6000);
 
-  // RISOLUZIONE: Gestione delle chiamate con squillo acustico ad anello continuo
+  // Chiamate ad anello continuo sonoro
   setInterval(() => {
     if (focusScore <= 0 || callBox.style.display === 'block' || isHyperfocused) return;
     document.getElementById('call-author').textContent = callers[Math.floor(Math.random() * callers.length)];
     callBox.style.display = 'block';
-    
-    // Inizia l'anello dello squillo telefonico continuo (suona ripetutamente ogni 1.4s)
     ringInterval = setInterval(() => {
-      playSynthTone(580, 0.4, 'sine', 0.05); // Tono squillo udibile squillante
-      setTimeout(() => { playSynthTone(580, 0.4, 'sine', 0.05); }, 200);
+      playSynthTone(580, 0.4, 'sine', 0.04);
+      setTimeout(() => { playSynthTone(580, 0.4, 'sine', 0.04); }, 200);
     }, 1400);
   }, 11000);
 
-  function stopPhoneRing() {
-    if (ringInterval) {
-      clearInterval(ringInterval);
-      ringInterval = null;
-    }
-  }
+  function stopPhoneRing() { if (ringInterval) { clearInterval(ringInterval); ringInterval = null; } }
 
   document.getElementById('call-acc').addEventListener('click', (e) => { e.stopPropagation(); stopPhoneRing(); callBox.style.display = 'none'; consumeFocus(12); });
   document.getElementById('call-dec').addEventListener('click', (e) => { e.stopPropagation(); stopPhoneRing(); callBox.style.display = 'none'; });
 
-  // Consumo progressivo della riserva energetica attentiva
   setInterval(() => {
     if (focusScore > 0 && !isHyperfocused) {
       focusScore = Math.max(0, focusScore - 0.5);
       focusFill.style.width = focusScore + '%';
       hudVal.textContent = Math.round(focusScore) + '%';
       telemetry.focusHistory.push(Math.round(focusScore));
-      
       if (focusScore < 30 && !root.classList.contains('panic')) root.classList.add('panic');
       if (focusScore <= 0) { stopPhoneRing(); renderEndDashboard(); }
     }
   }, 250);
 
-  function consumeFocus(amount) {
-    if(!isHyperfocused) focusScore = Math.max(0, focusScore - amount);
-  }
+  function consumeFocus(amount) { if(!isHyperfocused) focusScore = Math.max(0, focusScore - amount); }
 
   function renderEndDashboard() {
     document.getElementById('analytics-screen').style.display = 'flex';
@@ -338,14 +334,10 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('stat-distract').textContent = telemetry.falseClicks;
     document.getElementById('stat-hyper').textContent = telemetry.hyperStates;
     document.getElementById('stat-time').textContent = Math.round((Date.now() - telemetry.startTime) / 1000) + 's';
-    
     let history = telemetry.focusHistory;
-    let width = chartTarget.offsetWidth || 500;
-    let height = 140;
-    let pointsStr = "";
+    let width = chartTarget.offsetWidth || 500; let height = 140; let pointsStr = "";
     history.forEach((val, idx) => {
-      let x = (idx / (history.length - 1)) * width;
-      let y = height - ((val / 100) * height);
+      let x = (idx / (history.length - 1)) * width; let y = height - ((val / 100) * height);
       pointsStr += `${x},${y} `;
     });
     chartTarget.innerHTML = `<svg width="100%" height="100%" style="position:absolute; inset:0; overflow:visible;"><polyline points="${pointsStr}" fill="none" stroke="#28c840" stroke-width="2"/></svg>`;
@@ -353,15 +345,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   desktopGrid.addEventListener('click', () => { telemetry.falseClicks++; consumeFocus(8); });
 
-  // Movimento repulsivo aggiuntivo se l'utente tenta di inseguire la risorsa centrale con movimenti non fluidi
+  // Fuga al mouse repulsiva aggiuntiva
   document.getElementById('win-main').addEventListener('mouseenter', () => {
     if (focusScore < 85 && !isHyperfocused) {
-      const maxX = window.innerWidth - 300;
-      const maxY = window.innerHeight - 200;
+      const maxX = window.innerWidth - 300; const maxY = window.innerHeight - 200;
       document.getElementById('win-main').style.left = Math.random() * maxX + 'px';
       document.getElementById('win-main').style.top = Math.random() * maxY + 'px';
-      consumeFocus(2);
-      playSynthTone(240, 0.05, 'sawtooth', 0.02);
+      consumeFocus(1.5);
+      playSynthTone(240, 0.05, 'sawtooth', 0.01);
     }
   });
 
