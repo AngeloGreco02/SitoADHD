@@ -3,49 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cognitive Overload Engine - Real Messy Desktop</title>
+  <title>Cognitive Overload Engine - Infinite Stacking Build</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body, html { width: 100%; height: 100%; overflow: hidden; background: #111218; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     #glitch-root { width: 100vw; height: 100vh; position: relative; overflow: hidden; cursor: default; user-select: none; }
     
-    /* Griglia del desktop disordinato reale */
-    .desktop-bg { 
-      position: absolute; inset: 0; 
-      background-color: #161822; 
-      background-image: radial-gradient(rgba(255,255,255,0.01) 1px, transparent 0); 
-      background-size: 40px 40px; 
-      display: grid; 
-      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); 
-      grid-template-rows: repeat(auto-fill, minmax(100px, 1fr)); 
-      gap: 20px; padding: 30px; z-index: 0; 
-    }
-
-    /* Stile delle icone grafiche del Desktop */
-    .bg-icon { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; opacity: 0.4; cursor: pointer; padding: 6px; border-radius: 6px; z-index: 1; transition: opacity 0.2s; }
-    .bg-icon:hover { opacity: 0.7; background: rgba(255,255,255,0.03); }
-    .bg-icon:active { background: rgba(220, 80, 80, 0.2); opacity: 0.9; }
-    
-    /* Icone vettoriali simulate in CSS Puro */
+    /* Griglia del desktop */
+    .desktop-bg { position: absolute; inset: 0; background-color: #161822; background-size: 40px 40px; display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); grid-template-rows: repeat(auto-fill, minmax(100px, 1fr)); gap: 20px; padding: 30px; z-index: 0; }
+    .bg-icon { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; opacity: 0.35; cursor: pointer; padding: 6px; border-radius: 6px; z-index: 1; }
     .bg-icon-visual { width: 32px; height: 32px; margin-bottom: 6px; position: relative; }
-    
-    /* Cartella Gialla */
     .bg-icon-visual.folder { background: #e0a96d; border-radius: 3px 6px 3px 3px; }
     .bg-icon-visual.folder::before { content: ''; position: absolute; top: -4px; left: 0; width: 12px; height: 4px; background: #e0a96d; border-radius: 2px 2px 0 0; }
-    
-    /* Documento PDF Rosso */
     .bg-icon-visual.pdf { background: #ef5350; border-radius: 2px; }
     .bg-icon-visual.pdf::before { content: 'PDF'; position: absolute; bottom: 2px; left: 3px; font-size: 8px; font-family: monospace; color: #fff; font-weight: bold; }
-    .bg-icon-visual.pdf::after { content: ''; position: absolute; top: 0; right: 0; width: 8px; height: 8px; background: #161822; border-bottom-left-radius: 2px; }
-
-    /* Foglio Excel Verde */
-    .bg-icon-visual.excel { background: #26a69a; border-radius: 2px; }
-    .bg-icon-visual.excel::before { content: 'XLS'; position: absolute; bottom: 2px; left: 3px; font-size: 8px; font-family: monospace; color: #fff; font-weight: bold; }
-
-    /* Immagine PNG Blu */
-    .bg-icon-visual.image { background: #42a5f5; border-radius: 2px; }
-    .bg-icon-visual.image::before { content: 'PNG'; position: absolute; bottom: 2px; left: 3px; font-size: 8px; font-family: monospace; color: #fff; font-weight: bold; }
-
     .bg-icon-text { font-size: 9.5px; color: #a0a5b5; font-family: monospace; margin-top: 2px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; width: 100%; word-break: break-all; }
 
     /* HUD */
@@ -56,7 +27,7 @@
     .focus-bar-bg { width: 100%; height: 6px; background: rgba(255, 255, 255, 0.08); border-radius: 3px; overflow: hidden; }
     .focus-bar-fill { width: 100%; height: 100%; background: #28c840; transition: width 0.2s linear; }
 
-    /* Schede fluttuanti e impazzite */
+    /* Finestre operative e di chiamata dinamiche */
     .win { position: absolute; background: rgba(15, 16, 24, 0.97); border: 0.5px solid rgba(100,200,100,0.2); border-radius: 8px; box-shadow: 0 15px 45px rgba(0,0,0,0.6); z-index: 10; cursor: pointer; transition: left 1.2s cubic-bezier(0.1, 0.8, 0.3, 1), top 1.2s cubic-bezier(0.1, 0.8, 0.3, 1); }
     .win-title { display: flex; align-items: center; gap: 6px; padding: 10px 12px; border-bottom: 0.5px solid rgba(100,200,100,0.12); font-size: 11px; color: rgba(160,200,160,0.7); font-family: monospace; }
     .win-dot { width: 7px; height: 7px; border-radius: 50%; background: #eceff1; }
@@ -64,21 +35,22 @@
     .win-cta { margin-top: 10px; padding: 6px; font-size: 11px; background: rgba(40,200,80,0.06); border: 0.5px solid rgba(40,200,80,0.2); border-radius: 4px; color: #28c840; text-align: center; font-family: monospace; }
 
     .todo-widget { width: 280px; left: 40px; top: 120px; }
-    .todo-list { list-style: none; margin-top: 8px; display: flex; flex-direction: column; gap: 6px; max-height: 180px; overflow-y: auto; }
+    .todo-list { list-style: none; margin-top: 8px; display: flex; flex-direction: column; gap: 6px; }
     .todo-item { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.02); padding: 6px 8px; border-radius: 4px; font-family: monospace; font-size: 11px; }
 
-    /* Overlay Chiamate */
-    .incoming-call-overlay { position: absolute; top: 30px; left: 35vw; width: 360px; background: #141520; border: 1px solid #febc2e; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.8); z-index: 190; padding: 16px; display: none; transition: left 1.2s ease, top 1.2s ease; }
-    .call-actions { display: flex; gap: 10px; margin-top: 10px; }
-    .call-btn { flex: 1; padding: 8px; border: none; border-radius: 6px; font-family: monospace; cursor: pointer; font-weight: bold; color: #fff; }
-    
+    /* Template grafico per i pop-up di chiamata che si accumulano */
+    .incoming-call-box { width: 340px; background: #141520; border: 1px solid #febc2e; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.8); z-index: 110; padding: 16px; }
+    .call-info { display: flex; align-items: center; gap: 12px; }
+    .call-avatar { width: 36px; height: 36px; background: #febc2e; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .call-actions { display: flex; gap: 10px; margin-top: 12px; }
+    .call-btn { flex: 1; padding: 8px; border: none; border-radius: 6px; font-family: monospace; cursor: pointer; font-weight: bold; color: #fff; text-align: center; }
+
     #toast-container { position: absolute; bottom: 60px; right: 20px; width: 320px; z-index: 180; display: flex; flex-direction: column; gap: 10px; }
     .toast-notification { background: #181114; border: 0.5px solid #ff5f57; border-radius: 6px; padding: 12px; color: #fff; font-size: 12px; font-family: monospace; }
     .panic-alarm-banner { position: absolute; inset: 0; border: 4px solid #ff5f57; pointer-events: none; z-index: 140; opacity: 0; }
     #glitch-root.panic .panic-alarm-banner { animation: blinkAlarm 0.4s infinite; }
     @keyframes blinkAlarm { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
 
-    /* Dashboard Analytics */
     .analytics-overlay { position: absolute; inset: 0; background: #090a10; z-index: 250; display: none; align-items: center; justify-content: center; color: #fff; padding: 20px; }
     .analytics-card { background: #121420; border: 1px solid rgba(100,255,100,0.2); border-radius: 12px; padding: 30px; max-width: 600px; width: 100%; }
     .analytics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0; }
@@ -114,36 +86,21 @@
       <ul class="todo-list" id="todo-master-list">
         <li class="todo-item"><input type="checkbox"> <span>Scrivi Relazione Tecnica</span></li>
         <li class="todo-item"><input type="checkbox"> <span>Invia email a R.U.</span></li>
-        <li class="todo-item"><input type="checkbox"> <span>Paga bolletta server</span></li>
       </ul>
     </div>
   </div>
 
-  <div class="win" id="win-main" style="left: 42vw; top: 38vh; width: 290px;">
+  <div class="win" id="win-main" style="left: 40vw; top: 40vh; width: 290px;">
     <div class="win-title"><div class="win-dot" style="background:#28c840"></div><span>executive_hub.exe</span></div>
     <div class="win-body">
       <div class="main" style="font-weight:bold; color:#fff;">Risorsa Clinica</div>
-      <div style="font-size:11px; margin-top:4px; color:rgba(150,180,150,0.8);">Interfaccia di ancoraggio. Clicca per accedere alle documentazioni scientifiche.</div>
+      <div style="font-size:11px; margin-top:4px; color:rgba(150,180,150,0.8);">Clicca qui per accedere alla documentazione di supporto e terminare il test.</div>
       <div class="win-cta">→ Apri Risorse</div>
     </div>
   </div>
 
-  <div class="incoming-call-overlay" id="call-box">
-    <div class="call-info" style="display:flex; align-items:center; gap:12px;">
-      <div class="call-avatar">📞</div>
-      <div class="call-text" style="font-family:monospace; color:#fff; font-size:12px;">
-        <div id="call-author" style="font-weight:bold;">Direttore Generale</div>
-        <div style="color:rgba(255,255,255,0.5);">Chiamata in ingresso Teams</div>
-      </div>
-    </div>
-    <div class="call-actions">
-      <button class="call-btn" id="call-acc" style="background:#28c840;">Rispondi</button>
-      <button class="call-btn" id="call-dec" style="background:#ff5f57;">Rifiuta</button>
-    </div>
-  </div>
-
   <div id="toast-container"></div>
-  <div class="hint" id="hint-text">Le finestre fluttuano in modo asincrono. Clicca la Risorsa Clinica per terminare.</div>
+  <div class="hint" id="hint-text">Se non rispondi, le chiamate si accumuleranno sullo schermo sovrapponendosi.</div>
   <div class="taskbar"><span class="taskbar-time" id="tclock">--:--</span></div>
 
   <div class="analytics-overlay" id="analytics-screen">
@@ -168,196 +125,22 @@ document.addEventListener('DOMContentLoaded', () => {
   const todoMasterList = document.getElementById('todo-master-list');
   const focusFill = document.getElementById('focus-fill');
   const hudVal = document.getElementById('hud-val');
-  const callBox = document.getElementById('call-box');
   const chartTarget = document.getElementById('chart-svg-target');
   const toastContainer = document.getElementById('toast-container');
 
   let telemetry = { subTasks: 0, falseClicks: 0, hyperStates: 0, startTime: Date.now(), focusHistory: [] };
   let focusScore = 100;
   let audioCtx = null;
-  let ringInterval = null;
+  let activeRingersCount = 0; // Contatore degli squilli concorrenti attivi
   let linearPoints = [];
   let hyperfocusTimer = 0;
   let isHyperfocused = false;
 
-  const callers = ["Direzione", "Sconosciuto", "Mamma", "Banca"];
+  const callers = ["Ufficio Risorse", "Numero Privato", "Mamma", "Corriere Amazon", "Banca", "Amministratore"];
   const toastPool = ["Nuova mail", "Scadenza imminente!", "Log di errore", "Notifica Chat"];
-  
-  // Tipi di icone con classi CSS abbinate per generare la grafica reale del desktop
-  const iconTypes = [
-    { class: "folder", name: "Nuova_Cartella_2" },
-    { class: "pdf", name: "report_medico.pdf" },
-    { class: "excel", name: "bilancio_2025.xls" },
-    { class: "image", name: "screenshot_43.png" }
-  ];
 
-  // Generazione del desktop grafico disordinato
-  for (let i = 0; i < 45; i++) {
-    if (Math.random() > 0.4) {
-      const type = iconTypes[Math.floor(Math.random() * iconTypes.length)];
+  // Generazione icone sul desktop
+  for (let i = 0; i < 40; i++) {
+    if (Math.random() > 0.5) {
       const icon = document.createElement('div');
-      icon.className = 'bg-icon';
-      icon.innerHTML = `<div class="bg-icon-visual ${type.class}"></div><div class="bg-icon-text">${type.name}</div>`;
-      desktopGrid.appendChild(icon);
-    } else {
-      desktopGrid.appendChild(document.createElement('div'));
-    }
-  }
-
-  function updateClock() {
-    const now = new Date();
-    document.getElementById('tclock').textContent = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
-  }
-  updateClock(); setInterval(updateClock, 10000);
-
-  function initAudio() {
-    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  }
-
-  function playSynthTone(freq, duration, type = 'sine', volume = 0.02) {
-    if (!audioCtx) return;
-    try {
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = type;
-      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-      gain.gain.setValueAtTime(volume, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
-      osc.connect(gain); gain.connect(audioCtx.destination);
-      osc.start(); osc.stop(audioCtx.currentTime + duration);
-    } catch(e) {}
-  }
-
-  // Drifting Engine Autonomo (Movimento Caotico continuo)
-  function makeWindowDrift(element) {
-    setInterval(() => {
-      if (focusScore <= 0 || isHyperfocused) return;
-      const maxX = window.innerWidth - element.offsetWidth - 30;
-      const maxY = window.innerHeight - element.offsetHeight - 60;
-      element.style.left = Math.max(20, Math.random() * maxX) + 'px';
-      element.style.top = Math.max(40, Math.random() * maxY) + 'px';
-    }, 2200 + Math.random() * 800);
-  }
-
-  makeWindowDrift(document.getElementById('todo-box'));
-  makeWindowDrift(document.getElementById('win-main'));
-  makeWindowDrift(callBox);
-
-  // Battito cardiaco acustico passivo
-  setInterval(() => {
-    if (focusScore <= 0 || !audioCtx) return;
-    let isCritical = focusScore < 30;
-    playSynthTone(isCritical ? 85 : 55, isCritical ? 0.1 : 0.18, 'sine', 0.03);
-  }, 750);
-
-  todoMasterList.addEventListener('change', (e) => {
-    if (e.target && e.target.matches('input[type="checkbox"]')) {
-      e.preventDefault(); e.target.checked = false;
-      telemetry.subTasks++; consumeFocus(5);
-      const newLi = document.createElement('li');
-      newLi.className = 'todo-item';
-      newLi.innerHTML = `<input type="checkbox"> <span style="color:#ff7f7f;">Sotto-task concorrente</span>`;
-      todoMasterList.insertBefore(newLi, e.target.closest('li').nextSibling);
-    }
-  });
-
-  root.addEventListener('mousemove', (e) => {
-    initAudio();
-    if (isHyperfocused) return;
-    linearPoints.push({x: e.clientX, y: e.clientY});
-    if (linearPoints.length > 10) linearPoints.shift();
-    if (linearPoints.length >= 4) {
-      let isLinear = true;
-      for (let i = 2; i < linearPoints.length; i++) {
-        let d1 = {x: linearPoints[i-1].x - linearPoints[i-2].x, y: linearPoints[i-1].y - linearPoints[i-2].y};
-        let d2 = {x: linearPoints[i].x - linearPoints[i-1].x, y: linearPoints[i].y - linearPoints[i-1].y};
-        if (Math.abs(d1.x * d2.y - d1.y * d2.x) > 150) { isLinear = false; break; }
-      }
-      if (isLinear) {
-        hyperfocusTimer += 30;
-        if (hyperfocusTimer > 3000) triggerHyperfocus();
-      } else { hyperfocusTimer = 0; }
-    }
-  });
-
-  function triggerHyperfocus() {
-    isHyperfocused = true; telemetry.hyperStates++;
-    root.classList.add('hyperfocus');
-    focusScore = Math.min(100, focusScore + 35);
-    toastContainer.innerHTML = '';
-    setTimeout(() => { isHyperfocused = false; root.classList.remove('hyperfocus'); hyperfocusTimer = 0; }, 5000);
-  }
-
-  // Notifiche asincrone toast
-  setInterval(() => {
-    if (focusScore <= 0 || isHyperfocused) return;
-    const toast = document.createElement('div');
-    toast.className = 'toast-notification';
-    toast.textContent = toastPool[Math.floor(Math.random() * toastPool.length)];
-    toastContainer.appendChild(toast);
-    playSynthTone(300, 0.08, 'sine', 0.02);
-    setTimeout(() => toast.remove(), 4000);
-  }, 6000);
-
-  // Chiamate ad anello continuo sonoro
-  setInterval(() => {
-    if (focusScore <= 0 || callBox.style.display === 'block' || isHyperfocused) return;
-    document.getElementById('call-author').textContent = callers[Math.floor(Math.random() * callers.length)];
-    callBox.style.display = 'block';
-    ringInterval = setInterval(() => {
-      playSynthTone(580, 0.4, 'sine', 0.04);
-      setTimeout(() => { playSynthTone(580, 0.4, 'sine', 0.04); }, 200);
-    }, 1400);
-  }, 11000);
-
-  function stopPhoneRing() { if (ringInterval) { clearInterval(ringInterval); ringInterval = null; } }
-
-  document.getElementById('call-acc').addEventListener('click', (e) => { e.stopPropagation(); stopPhoneRing(); callBox.style.display = 'none'; consumeFocus(12); });
-  document.getElementById('call-dec').addEventListener('click', (e) => { e.stopPropagation(); stopPhoneRing(); callBox.style.display = 'none'; });
-
-  setInterval(() => {
-    if (focusScore > 0 && !isHyperfocused) {
-      focusScore = Math.max(0, focusScore - 0.5);
-      focusFill.style.width = focusScore + '%';
-      hudVal.textContent = Math.round(focusScore) + '%';
-      telemetry.focusHistory.push(Math.round(focusScore));
-      if (focusScore < 30 && !root.classList.contains('panic')) root.classList.add('panic');
-      if (focusScore <= 0) { stopPhoneRing(); renderEndDashboard(); }
-    }
-  }, 250);
-
-  function consumeFocus(amount) { if(!isHyperfocused) focusScore = Math.max(0, focusScore - amount); }
-
-  function renderEndDashboard() {
-    document.getElementById('analytics-screen').style.display = 'flex';
-    document.getElementById('stat-tasks').textContent = telemetry.subTasks;
-    document.getElementById('stat-distract').textContent = telemetry.falseClicks;
-    document.getElementById('stat-hyper').textContent = telemetry.hyperStates;
-    document.getElementById('stat-time').textContent = Math.round((Date.now() - telemetry.startTime) / 1000) + 's';
-    let history = telemetry.focusHistory;
-    let width = chartTarget.offsetWidth || 500; let height = 140; let pointsStr = "";
-    history.forEach((val, idx) => {
-      let x = (idx / (history.length - 1)) * width; let y = height - ((val / 100) * height);
-      pointsStr += `${x},${y} `;
-    });
-    chartTarget.innerHTML = `<svg width="100%" height="100%" style="position:absolute; inset:0; overflow:visible;"><polyline points="${pointsStr}" fill="none" stroke="#28c840" stroke-width="2"/></svg>`;
-  }
-
-  desktopGrid.addEventListener('click', () => { telemetry.falseClicks++; consumeFocus(8); });
-
-  // Fuga al mouse repulsiva aggiuntiva
-  document.getElementById('win-main').addEventListener('mouseenter', () => {
-    if (focusScore < 85 && !isHyperfocused) {
-      const maxX = window.innerWidth - 300; const maxY = window.innerHeight - 200;
-      document.getElementById('win-main').style.left = Math.random() * maxX + 'px';
-      document.getElementById('win-main').style.top = Math.random() * maxY + 'px';
-      consumeFocus(1.5);
-      playSynthTone(240, 0.05, 'sawtooth', 0.01);
-    }
-  });
-
-  document.getElementById('win-main').addEventListener('click', () => { if(focusScore > 0) { stopPhoneRing(); renderEndDashboard(); } });
-});
-</script>
-</body>
-</html>
+      icon.className
