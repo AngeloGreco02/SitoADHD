@@ -3,21 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cognitive Overload Engine - Academic Build</title>
+  <title>Cognitive Overload Engine - Stable Build</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body, html { width: 100%; height: 100%; overflow: hidden; background: #07080c; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     #glitch-root { width: 100vw; height: 100vh; position: relative; overflow: hidden; cursor: default; user-select: none; }
     
     /* Sfondi e stati */
-    .desktop-bg { position: absolute; inset: 0; background-color: #0f1118; background-image: radial-gradient(rgba(255,255,255,0.02) 1px, transparent 0); background-size: 30px 30px; display: grid; grid-template-columns: repeat(auto-fill, minmax(95px, 1fr)); grid-template-rows: repeat(auto-fill, minmax(95px, 1fr)); gap: 15px; padding: 25px; z-index: 0; transition: all 0.4s ease; }
-    #glitch-root.hyperfocus .desktop-bg { background-color: #051408; background-image: radial-gradient(rgba(100,255,100,0.05) 1px, transparent 0); filter: blur(0px) !important; opacity: 1 !important; }
+    .desktop-bg { position: absolute; inset: 0; background-color: #0f1118; background-size: 30px 30px; display: grid; grid-template-columns: repeat(auto-fill, minmax(95px, 1fr)); grid-template-rows: repeat(auto-fill, minmax(95px, 1fr)); gap: 15px; padding: 25px; z-index: 0; transition: all 0.4s ease; }
+    #glitch-root.hyperfocus .desktop-bg { background-color: #051408; filter: blur(0px) !important; opacity: 1 !important; }
     #glitch-root.freeze .desktop-bg { opacity: 0.1; filter: blur(2px); }
 
     /* Icone Spazzatura */
-    .bg-icon { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; opacity: 0.15; cursor: pointer; padding: 4px; border-radius: 6px; }
-    .bg-icon:active { background: rgba(220, 80, 80, 0.2); opacity: 0.5; }
-    .bg-icon-visual { width: 24px; height: 24px; margin-bottom: 4px; background: #8e93a2; border-radius: 2px; }
+    .bg-icon { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; opacity: 0.35; cursor: pointer; padding: 4px; border-radius: 6px; }
+    .bg-icon:active { background: rgba(220, 80, 80, 0.2); opacity: 0.7; }
+    .bg-icon-visual { width: 24px; height: 24px; margin-bottom: 4px; background: #3a3f50; border-radius: 2px; border: 1px solid rgba(255,255,255,0.1); }
     .bg-icon-text { font-size: 9px; color: #8e93a2; font-family: monospace; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; }
 
     /* HUD */
@@ -48,14 +48,14 @@
     .call-btn { flex: 1; padding: 8px; border: none; border-radius: 6px; font-family: monospace; cursor: pointer; font-weight: bold; color: #fff; }
     
     #toast-container { position: absolute; bottom: 60px; right: 20px; width: 320px; z-index: 180; display: flex; flex-direction: column; gap: 10px; }
-    .toast-notification { background: #181114; border: 0.5px solid #ff5f57; border-radius: 6px; padding: 12px; pointer-events: all; }
+    .toast-notification { background: #181114; border: 0.5px solid #ff5f57; border-radius: 6px; padding: 12px; pointer-events: all; color: #fff; font-size: 12px; }
 
     .panic-alarm-banner { position: absolute; inset: 0; border: 4px solid #ff5f57; pointer-events: none; z-index: 140; opacity: 0; }
     #glitch-root.panic .panic-alarm-banner { animation: blinkAlarm 0.4s infinite; }
     @keyframes blinkAlarm { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
 
     /* Analytics Dashboard Overlay */
-    .analytics-overlay { position: absolute; inset: 0; background: #090a10; z-index: 250; display: none; align-items: center; justify-content: center; color: #fff; padding: 4px; overflow-y: auto; }
+    .analytics-overlay { position: absolute; inset: 0; background: #090a10; z-index: 250; display: none; align-items: center; justify-content: center; color: #fff; padding: 20px; overflow-y: auto; }
     .analytics-card { background: #121420; border: 1px solid rgba(100,255,100,0.2); border-radius: 12px; padding: 30px; max-width: 600px; width: 100%; box-shadow: 0 30px 70px rgba(0,0,0,0.9); }
     .analytics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0; }
     .stat-box { background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 0.5px solid rgba(255,255,255,0.05); }
@@ -90,8 +90,8 @@
       <div style="font-size:10px; color:rgba(255,255,255,0.4); font-family:monospace;">Completa i task per vincere</div>
       <ul class="todo-list" id="todo-master-list">
         <li class="todo-item"><input type="checkbox" data-task="1"> <span>Scrivi Relazione Tecnica</span></li>
-        <li class="todo-item"><input type="checkbox" data-task="2"> <span>Invia email a Risorse Umane</span></li>
-        <li class="todo-item"><input type="checkbox" data-task="3"> <span>Paga bolletta scorta server</span></li>
+        <li class="todo-item"><input type="checkbox" data-task="2"> <span>Invia email a R.U.</span></li>
+        <li class="todo-item"><input type="checkbox" data-task="3"> <span>Paga bolletta server</span></li>
       </ul>
     </div>
   </div>
@@ -107,7 +107,7 @@
 
   <div class="incoming-call-overlay" id="call-box">
     <div class="call-info" style="display:flex; align-items:center; gap:12px;">
-      <div class="call-avatar" style="width:36px; height:36px; background:#febc2e; border-radius:50%; display:flex; align-items:center; justify-content:center;">📞</div>
+      <div class="call-avatar">📞</div>
       <div class="call-text" style="font-family:monospace; color:#fff; font-size:12px;">
         <div id="call-author" style="font-weight:bold;">Direttore Generale</div>
         <div style="color:rgba(255,255,255,0.5);">Chiamata in ingresso Teams</div>
@@ -126,18 +126,14 @@
   <div class="analytics-overlay" id="analytics-screen">
     <div class="analytics-card">
       <h2 style="color:#fff; font-family:monospace; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:10px;">Analisi del Sovraccarico Cognitivo</h2>
-      <p style="font-size:13px; color:rgba(255,255,255,0.6); margin-top:10px;">Il tuo Focus si è esaurito. Ecco come la tua mente ha gestito i vettori di interruzione:</p>
-      
       <div class="analytics-grid">
-        <div class="stat-box"><div style="font-size:10px; font-family:monospace; color:rgba(255,255,255,0.4);">Sotto-Task Generati (Frammentazione)</div><div class="stat-val" id="stat-tasks">0</div></div>
-        <div class="stat-box"><div style="font-size:10px; font-family:monospace; color:rgba(255,255,255,0.4);">Distrazioni da Falsi Positivi</div><div class="stat-val" id="stat-distract">0</div></div>
-        <div class="stat-box"><div style="font-size:10px; font-family:monospace; color:rgba(255,255,255,0.4);">Stati di Hyperfocus Raggiunti</div><div class="stat-val" id="stat-hyper">0</div></div>
-        <div class="stat-box"><div style="font-size:10px; font-family:monospace; color:rgba(255,255,255,0.4);">Tempo di Resistenza Sessione</div><div class="stat-val" id="stat-time">0s</div></div>
+        <div class="stat-box"><div>Sotto-Task Generati</div><div class="stat-val" id="stat-tasks">0</div></div>
+        <div class="stat-box"><div>Falsi Click Sfondo</div><div class="stat-val" id="stat-distract">0</div></div>
+        <div class="stat-box"><div>Iperfocus Raggiunti</div><div class="stat-val" id="stat-hyper">0</div></div>
+        <div class="stat-box"><div>Tempo Sessione</div><div class="stat-val" id="stat-time">0s</div></div>
       </div>
-
-      <div style="font-size:11px; font-family:monospace; color:rgba(100,255,100,0.8); margin-bottom:6px;">Grafico della Curva Attentiva</div>
+      <div style="font-size:11px; font-family:monospace; color:#28c840; margin-bottom:6px;">Grafico della Curva Attentiva</div>
       <div class="chart-container" id="chart-svg-target"></div>
-      
       <button onclick="window.location.reload()" style="margin-top:25px; width:100%; padding:12px; background:#28c840; border:none; border-radius:6px; color:#fff; font-family:monospace; font-weight:bold; cursor:pointer;">Riavvia Simulazione</button>
     </div>
   </div>
@@ -145,106 +141,105 @@
 
 <script>
 const root = document.getElementById('glitch-root');
+const desktopGrid = document.getElementById('desktop-grid');
 const todoMasterList = document.getElementById('todo-master-list');
 const focusFill = document.getElementById('focus-fill');
 const hudVal = document.getElementById('hud-val');
 const hudText = document.getElementById('hud-text');
 const callBox = document.getElementById('call-box');
 const chartTarget = document.getElementById('chart-svg-target');
+const toastContainer = document.getElementById('toast-container');
 
-// Metriche di telemetria per sessionStorage
 let telemetry = { subTasks: 0, falseClicks: 0, hyperStates: 0, startTime: Date.now(), focusHistory: [] };
-
 let focusScore = 100;
-let audioCtx = null, heartBeatNode = null, heartBeatOsc = null;
+let audioCtx = null;
 let linearPoints = [];
 let hyperfocusTimer = 0;
 let isHyperfocused = false;
 
-// Web Audio API: Generatore di battito cardiaco procedurale sincronizzato al Focus
-function startProceduralHeartbeat() {
-  if (audioCtx) return;
-  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  
-  // Creiamo un loop basato su intervalli temporali discreti per emulare la sistole/diastole
-  setInterval(() => {
-    if (focusScore <= 0) return;
-    
-    // Il battito accelera se il focus cala sotto il 30% (Stress Acustico)
-    let isCritical = focusScore < 30;
-    let duration = isCritical ? 0.12 : 0.2;
-    let frequency = isCritical ? 90 : 55; // Più acuto e pressante sotto stress
-    
-    try {
-      let osc = audioCtx.createOscillator();
-      let gain = audioCtx.createGain();
-      let filter = audioCtx.createBiquadFilter();
-      
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(frequency, audioCtx.currentTime);
-      
-      filter.type = 'lowpass';
-      filter.frequency.setValueAtTime(120, audioCtx.currentTime); // Taglio per un suono cupo e sordo
-      
-      gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
-      
-      osc.connect(filter); filter.connect(gain); gain.connect(audioCtx.destination);
-      osc.start(); osc.stop(audioCtx.currentTime + duration);
-    } catch(e) {}
-  }, focusScore < 30 ? 380 : 850); // Frequenza cardiaca dinamica
+const callers = ["Direzione", "Sconosciuto", "Mamma", "Banca (Importante)"];
+const toastMessages = ["Nuova mail di lavoro", "Hai dimenticato una scadenza?", "Aggiornamento di sistema pronto", "Notifica di messaggistica"];
+
+// Generazione icone di sfondo procedurali corrette
+for (let i = 0; i < 40; i++) {
+  if (Math.random() > 0.5) {
+    const icon = document.createElement('div');
+    icon.className = 'bg-icon';
+    icon.innerHTML = `<div class="bg-icon-visual"></div><div class="bg-icon-text">junk_file_${i}.txt</div>`;
+    desktopGrid.appendChild(icon);
+  } else {
+    desktopGrid.appendChild(document.createElement('div'));
+  }
 }
 
-// Meccanica 1: Task Management Fallimentare tramite EVENT DELEGATION
+function updateClock() {
+  const now = new Date();
+  document.getElementById('tclock').textContent = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+}
+updateClock(); setInterval(updateClock, 10000);
+
+function initAudio() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+}
+
+function playSynthTone(freq, duration, type = 'sine') {
+  if (!audioCtx) return;
+  try {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    gain.gain.setValueAtTime(0.02, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    osc.start(); osc.stop(audioCtx.currentTime + duration);
+  } catch(e) {}
+}
+
+// Battito cardiaco procedurale basato sulla riserva di focus
+setInterval(() => {
+  if (focusScore <= 0 || !audioCtx) return;
+  let isCritical = focusScore < 30;
+  playSynthTone(isCritical ? 85 : 55, isCritical ? 0.1 : 0.18, 'sine');
+}, focusScore < 30 ? 350 : 800);
+
+// To-Do List Fallimentare con Event Delegation stabile
 todoMasterList.addEventListener('change', (e) => {
   if (e.target && e.target.matches('input[type="checkbox"]')) {
     e.preventDefault();
-    e.target.checked = false; // Forza il fallimento del check
-    
+    e.target.checked = false;
     telemetry.subTasks++;
-    consumeFocus(6);
+    consumeFocus(5);
     
-    // Sposta la casella di controllo per simulare instabilità motoria
-    e.target.style.transform = `translate(${Math.random()*15 - 7.5}px, ${Math.random()*15 - 7.5}px)`;
+    e.target.style.transform = `translate(${Math.random()*12 - 6}px, ${Math.random()*12 - 6}px)`;
     
-    // Generazione dinamica di un sotto-task concorrente nello stesso albero DOM
-    const subTasksPool = ["Trova le chiavi di casa", "Rileggi l'introduzione", "Controlla lo smartphone", "Verifica i log di sistema"];
     const newLi = document.createElement('li');
     newLi.className = 'todo-item';
-    newLi.style.paddingLeft = "20px";
+    newLi.style.paddingLeft = "15px";
     newLi.style.borderLeft = "1px solid #ff5f57";
-    newLi.innerHTML = `<input type="checkbox" data-task="sub"> <span style="color:#ff7f7f;">Sotto-task: ${subTasksPool[Math.floor(Math.random()*subTasksPool.length)]}</span>`;
-    
+    newLi.innerHTML = `<input type="checkbox"> <span style="color:#ff7f7f;">Sotto-compito improvviso</span>`;
     todoMasterList.insertBefore(newLi, e.target.closest('li').nextSibling);
-    document.getElementById('gbar').style.display = 'block'; 
-    setTimeout(() => document.getElementById('gbar').style.display = 'none', 80);
   }
 });
 
-// Meccanica 2: Calcolo vettoriale della linearità per l'Hyperfocus
+// Analisi lineare del mouse per Hyperfocus
 root.addEventListener('mousemove', (e) => {
-  startProceduralHeartbeat();
-  
+  initAudio();
   if (isHyperfocused) return;
   
-  linearPoints.push({x: e.clientX, y: e.clientY, t: Date.now()});
-  if (linearPoints.length > 15) linearPoints.shift();
+  linearPoints.push({x: e.clientX, y: e.clientY});
+  if (linearPoints.length > 10) linearPoints.shift();
   
-  // Analisi vettoriale: calcoliamo la deviazione standard del movimento angolare
-  if (linearPoints.length >= 5) {
+  if (linearPoints.length >= 4) {
     let isLinear = true;
     for (let i = 2; i < linearPoints.length; i++) {
       let d1 = {x: linearPoints[i-1].x - linearPoints[i-2].x, y: linearPoints[i-1].y - linearPoints[i-2].y};
       let d2 = {x: linearPoints[i].x - linearPoints[i-1].x, y: linearPoints[i].y - linearPoints[i-1].y};
-      let crossProduct = Math.abs(d1.x * d2.y - d1.y * d2.x);
-      if (crossProduct > 180) { isLinear = false; break; } // Curva brusca detected
+      if (Math.abs(d1.x * d2.y - d1.y * d2.x) > 150) { isLinear = false; break; }
     }
-    
     if (isLinear) {
-      hyperfocusTimer += 16; // Incremento basato sull'intervallo di polling teorico
-      if (hyperfocusTimer > 4000) { // 4 secondi continui di movimento pulito
-        triggerHyperfocus();
-      }
+      hyperfocusTimer += 30;
+      if (hyperfocusTimer > 3000) triggerHyperfocus();
     } else {
       hyperfocusTimer = 0;
     }
@@ -255,26 +250,50 @@ function triggerHyperfocus() {
   isHyperfocused = true;
   telemetry.hyperStates++;
   root.classList.add('hyperfocus');
-  hudText.textContent = "STATO DI IPERFOCUS ATTIVO";
-  focusScore = Math.min(100, focusScore + 40);
-  document.getElementById('toast-container').innerHTML = ''; // Elimina le distrazioni
+  hudText.textContent = "STATO DI IPERFOCUS ACCESO";
+  focusScore = Math.min(100, focusScore + 35);
+  toastContainer.innerHTML = '';
   
   setTimeout(() => {
     isHyperfocused = false;
     root.classList.remove('hyperfocus');
     hudText.textContent = "Capacità Esecutiva";
     hyperfocusTimer = 0;
-  }, 6000); // L'iperfocus dura 6 secondi prima del ritorno al rumore di fondo
+  }, 5000);
 }
 
-// Consumo passivo e monitoraggio dello storico
+// Spwn asincrono di toast di disturbo
+setInterval(() => {
+  if (focusScore <= 0 || isHyperfocused) return;
+  const toast = document.createElement('div');
+  toast.className = 'toast-notification';
+  toast.textContent = toastPool[Math.floor(Math.random() * toastPool.length)];
+  toastContainer.appendChild(toast);
+  playSynthTone(300, 0.08, 'sine');
+  setTimeout(() => toast.remove(), 4000);
+}, 7000);
+const toastPool = toastMessages;
+
+// Trigger Chiamate Invasive
+setInterval(() => {
+  if (focusScore <= 0 || callBox.style.display === 'block' || isHyperfocused) return;
+  document.getElementById('call-author').textContent = callers[Math.floor(Math.random() * callers.length)];
+  callBox.style.display = 'block';
+  playSynthTone(440, 0.5, 'sine');
+}, 11000);
+
+document.getElementById('call-acc').addEventListener('click', (e) => { e.stopPropagation(); callBox.style.display = 'none'; consumeFocus(12); });
+document.getElementById('call-dec').addEventListener('click', (e) => { e.stopPropagation(); callBox.style.display = 'none'; });
+
+// Consumo passivo
 setInterval(() => {
   if (focusScore > 0 && !isHyperfocused) {
-    focusScore = Math.max(0, focusScore - 0.4);
+    focusScore = Math.max(0, focusScore - 0.5);
     focusFill.style.width = focusScore + '%';
     hudVal.textContent = Math.round(focusScore) + '%';
     telemetry.focusHistory.push(Math.round(focusScore));
     
+    if (focusScore < 30 && !root.classList.contains('panic')) root.classList.add('panic');
     if (focusScore <= 0) renderEndDashboard();
   }
 }, 250);
@@ -283,66 +302,36 @@ function consumeFocus(amount) {
   if(!isHyperfocused) focusScore = Math.max(0, focusScore - amount);
 }
 
-// Meccanica 3: Generazione dei grafici SVG nativi per l'Analytics finale
 function renderEndDashboard() {
-  sessionStorage.setItem('session_telemetry', JSON.stringify(telemetry));
   document.getElementById('analytics-screen').style.display = 'flex';
-  
   document.getElementById('stat-tasks').textContent = telemetry.subTasks;
   document.getElementById('stat-distract').textContent = telemetry.falseClicks;
   document.getElementById('stat-hyper').textContent = telemetry.hyperStates;
   document.getElementById('stat-time').textContent = Math.round((Date.now() - telemetry.startTime) / 1000) + 's';
   
-  // Disegniamo una Polyline SVG dinamica basata sullo storico del Focus salvato
   let history = telemetry.focusHistory;
-  if(history.length === 0) history = [100, 50, 0];
-  
   let width = chartTarget.offsetWidth || 500;
   let height = 140;
   let pointsStr = "";
-  
   history.forEach((val, idx) => {
     let x = (idx / (history.length - 1)) * width;
     let y = height - ((val / 100) * height);
     pointsStr += `${x},${y} `;
   });
-  
-  chartTarget.innerHTML = `
-    <svg width="100%" height="100%" style="position:absolute; inset:0; overflow:visible;">
-      <polyline points="${pointsStr}" fill="none" stroke="#28c840" stroke-width="2"/>
-    </svg>
-  `;
+  chartTarget.innerHTML = `<svg width="100%" height="100%" style="position:absolute; inset:0; overflow:visible;"><polyline points="${pointsStr}" fill="none" stroke="#28c840" stroke-width="2"/></svg>`;
 }
 
-// Intercettazione click di distrazione sui falsi positivi di sfondo
-document.getElementById('desktop-grid').addEventListener('click', () => {
-  telemetry.falseClicks++;
-  consumeFocus(10);
-});
+desktopGrid.addEventListener('click', () => { telemetry.falseClicks++; consumeFocus(8); });
 
-// Generazione icone di sfondo procedurali
-for (let i = 0; i < 35; i++) {
-  if (Math.random() > 0.5) {
-    const icon = document.createElement('div');
-    icon.className = 'bg-icon';
-    icon.innerHTML = `<div class="bg-icon-visual"></div><div class="bg-icon-text">file_inutile_${i}.pdf</div>`;
-    desktopGrid.appendChild(icon);
-  } else {
-    desktopGrid.appendChild(document.createElement('div'));
-  }
-}
-
-// Logica di fuga della finestra di ancoraggio se il focus cala
+// Fuga della risorsa principale (Rimosso errore NewL e refusi matematici)
 document.getElementById('win-main').addEventListener('mouseenter', () => {
-  if (focusScore < 60 && !isHyperfocused) {
+  if (focusScore < 65 && !isHyperfocused) {
     document.getElementById('win-main').style.left = Math.random() * (window.innerWidth - 300) + 'px';
     document.getElementById('win-main').style.top = Math.random() * (window.innerHeight - 200) + 'px';
-    consumeFocus(3);
+    consumeFocus(2);
   }
 });
-document.getElementById('win-main').addEventListener('click', () => {
-  if(focusScore > 0) renderEndDashboard();
-});
+document.getElementById('win-main').addEventListener('click', () => { if(focusScore > 0) renderEndDashboard(); });
 </script>
 </body>
 </html>
