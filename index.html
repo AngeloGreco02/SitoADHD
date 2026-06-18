@@ -3,107 +3,48 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cognitive Overload Engine - Messy Desktop</title>
+  <title>Cognitive Overload Engine - Sensory Disruptions</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     
     body, html {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background: #12131a;
+      width: 100%; height: 100%; overflow: hidden;
+      background: #0b0c10;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
 
     #glitch-root {
-      width: 100vw;
-      height: 100vh;
-      position: relative;
-      overflow: hidden;
-      cursor: default;
-      user-select: none;
+      width: 100vw; height: 100vh; position: relative; overflow: hidden;
+      cursor: default; user-select: none;
     }
 
-    /* Desktop disordinato: griglia di sfondo per le icone spazzatura */
+    /* Griglia del desktop disordinato */
     .desktop-bg {
-      position: absolute; inset: 0;
-      background-color: #1a1c24;
-      /* Generiamo una texture geometrica sottile per simulare un wallpaper */
-      background-image: radial-gradient(rgba(255,255,255,0.03) 1px, transparent 0);
-      background-size: 24px 24px;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-      grid-template-rows: repeat(auto-fill, minmax(90px, 1fr));
-      gap: 15px;
-      padding: 30px;
-      z-index: 0;
-      overflow: hidden;
-      transition: filter 0.5s ease, opacity 0.5s ease;
+      position: absolute; inset: 0; background-color: #13151c;
+      background-image: radial-gradient(rgba(255,255,255,0.02) 1px, transparent 0);
+      background-size: 30px 30px; display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(95px, 1fr));
+      grid-template-rows: repeat(auto-fill, minmax(95px, 1fr));
+      gap: 15px; padding: 25px; z-index: 0; transition: filter 0.4s ease;
     }
 
-    /* Icone spazzatura del desktop reale */
     .bg-icon {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      opacity: 0.25; /* Sfumate per dare profondità sotto le finestre reali */
-      cursor: pointer;
-      padding: 5px;
-      border-radius: 6px;
-      transition: opacity 0.2s, background 0.2s;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; opacity: 0.2; cursor: pointer; padding: 4px; border-radius: 6px;
     }
-    /* Se l'utente clicca sui falsi positivi di sfondo, l'icona si illumina di rosso */
-    .bg-icon:active {
-      background: rgba(220, 80, 80, 0.2);
-      opacity: 0.6;
-    }
-    .bg-icon-visual {
-      width: 32px;
-      height: 32px;
-      margin-bottom: 6px;
-      position: relative;
-    }
-    /* Generazione via CSS di icone generiche per evitare asset esterni */
-    .bg-icon-visual.folder {
-      background: #e0a96d;
-      border-radius: 3px 6px 3px 3px;
-    }
-    .bg-icon-visual.folder::before {
-      content: ''; position: absolute; top: -4px; left: 0; width: 12px; height: 4px; background: #e0a96d; border-radius: 2px 2px 0 0;
-    }
-    .bg-icon-visual.file {
-      background: #eceff1;
-      border-radius: 2px;
-    }
-    .bg-icon-visual.file::before {
-      content: 'PDF'; position: absolute; bottom: 2px; left: 2px; font-size: 8px; font-family: monospace; color: #1a1c24; font-weight: bold;
-    }
-    .bg-icon-text {
-      font-size: 10px;
-      color: #a0a5b5;
-      font-family: monospace;
-      word-break: break-all;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
+    .bg-icon:active { background: rgba(220, 80, 80, 0.2); opacity: 0.5; }
+    .bg-icon-visual { width: 28px; height: 28px; margin-bottom: 4px; position: relative; }
+    .bg-icon-visual.folder { background: #dca366; border-radius: 3px 5px 3px 3px; }
+    .bg-icon-visual.folder::before { content: ''; position: absolute; top: -3px; left: 0; width: 10px; height: 3px; background: #dca366; }
+    .bg-icon-visual.file { background: #e2e4e6; border-radius: 2px; }
+    .bg-icon-text { font-size: 9.5px; color: #8e93a2; font-family: monospace; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
 
-    /* HUD della riserva di Focus */
+    /* HUD della Riserva di Focus */
     .hud-container {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      z-index: 150;
-      background: rgba(15, 16, 22, 0.95);
-      padding: 14px 20px;
-      border-radius: 8px;
-      border: 0.5px solid rgba(100, 255, 100, 0.15);
-      min-width: 260px;
-      pointer-events: none;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      position: absolute; top: 20px; left: 20px; z-index: 150;
+      background: rgba(12, 13, 18, 0.96); padding: 14px 20px;
+      border-radius: 8px; border: 0.5px solid rgba(100, 255, 100, 0.15);
+      min-width: 260px; pointer-events: none;
     }
     .hud-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
     .hud-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: rgba(100, 255, 100, 0.8); font-family: monospace; }
@@ -111,122 +52,57 @@
     .focus-bar-bg { width: 100%; height: 6px; background: rgba(255, 255, 255, 0.08); border-radius: 3px; overflow: hidden; }
     .focus-bar-fill { width: 100%; height: 100%; background: #28c840; transition: width 0.2s linear, background-color 0.4s ease; }
 
-    /* Stato di blocco cognitivo (Freeze) */
-    #glitch-root.freeze .desktop-bg { opacity: 0.05; filter: blur(2px); }
-    #glitch-root.freeze .win { filter: blur(2.5px) grayscale(80%); pointer-events: none; }
-    #glitch-root.freeze .toast-notification { filter: blur(2px) grayscale(80%); }
-
-    .scanlines {
-      position: absolute; inset: 0;
-      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,100,0.008) 2px, rgba(0,255,100,0.008) 4px);
-      pointer-events: none;
-      z-index: 1;
-    }
-
-    /* Finestre interattive */
+    /* Finestre Applicazione */
     .win {
-      position: absolute;
-      background: rgba(16, 17, 26, 0.96);
-      border: 0.5px solid rgba(100,200,100,0.25);
-      border-radius: 8px;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.8);
-      z-index: 10;
-      cursor: pointer;
-      min-width: 280px;
-      text-align: left;
-      display: block;
-      background-clip: padding-box;
-      transition: border-color 0.2s, left 0.35s cubic-bezier(0.16, 1, 0.3, 1), top 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      position: absolute; background: rgba(18, 19, 28, 0.97);
+      border: 0.5px solid rgba(100,200,100,0.2); border-radius: 8px;
+      box-shadow: 0 15px 45px rgba(0,0,0,0.6); z-index: 10; cursor: pointer; min-width: 270px;
+      transition: left 0.35s cubic-bezier(0.16, 1, 0.3, 1), top 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .win:hover { border-color: rgba(100,200,100,0.5); z-index: 40; }
+    .win:hover { border-color: rgba(100,200,100,0.45); z-index: 40; }
 
-    @keyframes fastJitter {
-      0% { transform: translate(0, 0); }
-      25% { transform: translate(-2px, 1.5px); }
-      50% { transform: translate(1.5px, -1.5px); }
-      75% { transform: translate(-1.5px, -1px); }
-      100% { transform: translate(2px, 2px); }
+    /* CHICCA 1: Interruzione Chiamata Entrante (Overlay invasivo) */
+    .incoming-call-overlay {
+      position: absolute; top: 30px; left: 50%; transform: translateX(-50%);
+      width: 360px; background: #161824; border: 1px solid #febc2e;
+      border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+      z-index: 190; padding: 16px; display: none;
+      animation: slideDown 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
-    .win.distracted {
-      animation: fastJitter 0.12s infinite;
-      border-color: rgba(220, 80, 80, 0.35) !important;
-    }
+    @keyframes slideDown { from { top: -100px; opacity: 0; } to { top: 30px; opacity: 1; } }
+    .call-info { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+    .call-avatar { width: 40px; height: 40px; background: #febc2e; border-radius: 50%; display:flex; align-items:center; justify-content:center; font-weight:bold; color:#161824; }
+    .call-text { font-family: monospace; }
+    .call-title { font-size: 13px; color: #fff; font-weight: bold; }
+    .call-sub { font-size: 11px; color: rgba(255,255,255,0.6); }
+    .call-actions { display: flex; gap: 10px; }
+    .call-btn { flex: 1; padding: 8px; border: none; border-radius: 6px; font-size: 12px; font-family: monospace; cursor: pointer; font-weight: bold; }
+    .call-btn.accept { background: #28c840; color: #fff; }
+    .call-btn.decline { background: #ff5f57; color: #fff; }
 
-    .win-title {
-      display: flex; align-items: center; gap: 6px; padding: 10px 12px;
-      border-bottom: 0.5px solid rgba(100,200,100,0.12);
-      font-size: 11px; color: rgba(160,200,160,0.7); font-family: monospace;
+    /* CHICCA 2: Allarme/Sveglia Visiva di Panico */
+    .panic-alarm-banner {
+      position: absolute; inset: 0; border: 4px solid #ff5f57;
+      pointer-events: none; z-index: 140; opacity: 0;
+      transition: opacity 0.15s ease;
     }
-    .win-dot { width: 7px; height: 7px; border-radius: 50%; }
-    .win-dot.r { background: #ff5f57; } .win-dot.y { background: #febc2e; } .win-dot.g { background: #28c840; }
-    
-    .win-body { padding: 14px; font-size: 12px; color: rgba(160,180,160,0.9); line-height: 1.5; }
-    .win-body .label { font-size: 9.5px; color: rgba(100,140,100,0.6); margin-bottom: 5px; font-family: monospace; }
-    .win-body .main { font-size: 13.5px; color: rgba(210,240,210,0.95); font-weight: 500; }
-    .win-body .sub { font-size: 11px; color: rgba(110,150,110,0.7); margin-top: 5px; }
-    
-    .win-cta {
-      margin-top: 12px; padding: 7px; font-size: 11px;
-      background: rgba(40,200,80,0.06); border: 0.5px solid rgba(40,200,80,0.2);
-      border-radius: 4px; color: rgba(100,220,100,0.85); text-align: center; font-family: monospace;
-    }
-
-    .error-win { border-color: rgba(220,80,80,0.35); }
-    .slack-win { border-color: rgba(80,80,220,0.35); }
-    .cal-win { border-color: rgba(220,160,40,0.35); }
+    #glitch-root.panic .panic-alarm-banner { animation: blinkAlarm 0.4s infinite; }
+    @keyframes blinkAlarm { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
 
     /* Pop-up Toast */
-    #toast-container {
-      position: absolute; bottom: 60px; right: 20px; width: 320px; z-index: 180;
-      display: flex; flex-direction: column; gap: 10px; pointer-events: none;
-    }
-    .toast-notification {
-      background: rgba(22, 14, 18, 0.98); border: 0.5px solid rgba(220, 80, 80, 0.4);
-      border-radius: 6px; padding: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-      pointer-events: all; animation: slideIn 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-    @keyframes slideIn {
-      from { transform: translateX(120%); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
-    }
-    .toast-header { font-size: 10px; font-family: monospace; color: #ff5f57; margin-bottom: 4px; display: flex; justify-content: space-between; }
-    .toast-close { cursor: pointer; background: none; border: none; color: rgba(255,255,255,0.4); font-size: 11px; }
-    .toast-title { font-size: 12px; color: #eee; font-weight: 500; }
-    .toast-desc { font-size: 11px; color: rgba(190,160,160,0.7); margin-top: 2px; }
+    #toast-container { position: absolute; bottom: 60px; right: 20px; width: 320px; z-index: 180; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
+    .toast-notification { background: rgba(24, 16, 20, 0.98); border: 0.5px solid rgba(220, 80, 80, 0.4); border-radius: 6px; padding: 12px; pointer-events: all; }
 
-    /* Barra delle applicazioni inferiore */
-    .taskbar {
-      position: absolute; bottom: 0; left: 0; right: 0; height: 40px;
-      background: rgba(14,14,20,0.99); border-top: 0.5px solid rgba(100,200,100,0.12);
-      display: flex; align-items: center; padding: 0 16px; z-index: 100;
-    }
+    /* Struttura Taskbar inferiore */
+    .taskbar { position: absolute; bottom: 0; left: 0; right: 0; height: 40px; background: rgba(12,12,16,0.99); border-top: 0.5px solid rgba(100,200,100,0.12); display: flex; align-items: center; padding: 0 16px; z-index: 100; }
     .taskbar-time { margin-left: auto; font-size: 12px; color: rgba(140,180,140,0.5); font-family: monospace; }
     
-    /* Overlay e Resource Card */
-    .overlay {
-      position: absolute; inset: 0; background: rgba(6,6,10,0.96); z-index: 200;
-      display: flex; align-items: center; justify-content: center;
-      opacity: 0; pointer-events: none; transition: opacity 0.2s ease;
-    }
+    /* Overlay Clinico */
+    .overlay { position: absolute; inset: 0; background: rgba(4,4,6,0.96); z-index: 200; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.2s ease; }
     .overlay.active { opacity: 1; pointer-events: all; }
-    
-    .resource-card {
-      background: #0d0d14; border-radius: 12px; padding: 32px;
-      max-width: 440px; width: 92%; position: relative;
-      border: 0.5px solid rgba(100,200,100,0.25); box-shadow: 0 25px 60px rgba(0,0,0,0.9);
-    }
-    .resource-tag { font-size: 10px; font-family: monospace; padding: 4px 8px; border-radius: 4px; display: inline-block; margin-bottom: 16px; }
-    .tag-err { background: rgba(220,80,80,0.1); color: #ff7f7f; border: 0.5px solid rgba(220,80,80,0.25); }
-    .resource-title { font-size: 18px; color: #fff; margin-bottom: 12px; line-height: 1.4; }
-    .resource-body { font-size: 13.5px; color: rgba(150,180,150,0.85); line-height: 1.6; margin-bottom: 24px; }
-    
-    .resource-link {
-      display: block; padding: 12px; border-radius: 6px; font-size: 12px; font-family: monospace; text-align: center; text-decoration: none;
-      background: rgba(100,200,100,0.06); border: 0.5px solid rgba(100,200,100,0.25); color: #90d090; transition: background 0.2s;
-    }
-    .resource-link:hover { background: rgba(100,200,100,0.12); }
+    .resource-card { background: #0e0e14; border-radius: 12px; padding: 32px; max-width: 440px; width: 92%; position: relative; border: 0.5px solid rgba(100,200,100,0.25); }
     .close-btn { position: absolute; top: 18px; right: 18px; font-size: 22px; color: rgba(140,170,140,0.3); cursor: pointer; background: none; border: none; }
-    .close-btn:hover { color: #fff; }
+    .resource-link { display: block; padding: 12px; border-radius: 6px; font-size: 12px; font-family: monospace; text-align: center; text-decoration: none; background: rgba(100,200,100,0.06); border: 0.5px solid rgba(100,200,100,0.25); color: #90d090; }
 
     .glitch-bar { position: absolute; left: 0; right: 0; height: 3px; background: rgba(220,80,80,0.35); z-index: 300; pointer-events: none; display: none; }
     .hint { position: absolute; bottom: 60px; left: 0; right: 0; text-align: center; font-size: 12px; font-family: monospace; color: rgba(100,150,100,0.35); z-index: 5; }
@@ -235,16 +111,14 @@
 <body>
 
 <div id="glitch-root">
-  <!-- Container per la griglia del desktop disordinato -->
+  <div class="panic-alarm-banner"></div>
   <div class="desktop-bg" id="desktop-grid"></div>
-  
-  <div class="scanlines"></div>
   <div class="glitch-bar" id="gbar"></div>
 
-  <!-- HUD Controllo Attentivo -->
+  <!-- HUD Controllo Energetico -->
   <div class="hud-container">
     <div class="hud-header">
-      <div class="hud-label" id="hud-text">Energia Esecutiva</div>
+      <div class="hud-label" id="hud-text">Autocontrollo Attentivo</div>
       <div class="hud-value" id="hud-val">100%</div>
     </div>
     <div class="focus-bar-bg">
@@ -252,75 +126,51 @@
     </div>
   </div>
 
+  <!-- Interfaccia Chiamata Simulato -->
+  <div class="incoming-call-overlay" id="call-box">
+    <div class="call-info">
+      <div class="call-avatar">⚠️</div>
+      <div class="call-text">
+        <div class="call-title" id="call-author">Chiamata in arrivo</div>
+        <div class="call-sub">Interruzione ad alta priorità</div>
+      </div>
+    </div>
+    <div class="call-actions">
+      <button class="call-btn accept" id="call-acc">Rispondi</button>
+      <button class="call-btn decline" id="call-dec">Rifiuta</button>
+    </div>
+  </div>
+
   <div id="toast-container"></div>
 
-  <!-- Finestre operative interattive -->
-  <button class="win error-win" id="win-error" style="left: 15vw; top: 20vh; width: 290px;">
+  <!-- Finestra Clinica Principale -->
+  <button class="win" id="win-main" style="left: 35vw; top: 30vh; width: 300px;">
     <div class="win-title">
       <div class="win-dot r"></div><div class="win-dot y"></div><div class="win-dot g"></div>
-      <span style="margin-left:6px">executive_dysfunction.sys</span>
+      <span style="margin-left:6px">executive_focus.sys</span>
     </div>
     <div class="win-body">
-      <div class="label">COGNITIVE_PARALYSIS</div>
-      <div class="main">Analisi delle priorità fallita</div>
-      <div class="sub">Troppi input concorrenti. Il cervello rifiuta la sequenzialità delle azioni.</div>
-      <div class="win-cta">→ Ispeziona blocco cognitivo</div>
+      <div class="label">SOCIALLY_DRIVEN_DESIGN</div>
+      <div class="main">Punto di Ingresso Clinico</div>
+      <div class="sub">Trova la stabilità superando le chiamate asincrone e i rumori di fondo ambientali.</div>
+      <div class="win-cta">→ Rompi il sovraccarico</div>
     </div>
   </button>
 
-  <button class="win slack-win" id="win-slack" style="right: 20vw; top: 15vh; width: 280px;">
-    <div class="win-title">
-      <div class="win-dot r"></div><div class="win-dot y"></div><div class="win-dot g"></div>
-      <span style="margin-left:6px">Slack — Team canali</span>
-    </div>
-    <div class="win-body">
-      <div class="label">Interruzione Esterna</div>
-      <div class="main">"Hai visto il file modificato?"</div>
-      <div class="sub">Un micro-task asincrono minaccia di distruggere l'iperfocus attuale.</div>
-      <div class="win-cta">→ Gestisci interruzione</div>
-    </div>
-  </button>
-
-  <button class="win cal-win" id="win-cal" style="left: 25vw; bottom: 18vh; width: 290px;">
-    <div class="win-title">
-      <div class="win-dot r"></div><div class="win-dot y"></div><div class="win-dot g"></div>
-      <span style="margin-left:6px">Scadenze accumulate</span>
-    </div>
-    <div class="win-body">
-      <div class="label">Time Blindness Model</div>
-      <div class="main">La scadenza temporale è svanita</div>
-      <div class="sub">Difficoltà intrinseca a percepire lo scorrere lineare delle ore. Tutto è "ORA" o "NON ORA".</div>
-      <div class="win-cta">→ Mappa linea temporale</div>
-    </div>
-  </button>
-
-  <button class="win" id="win-mail" style="right: 18vw; bottom: 22vh; width: 270px; border-color: rgba(140,80,200,0.35);">
-    <div class="win-title">
-      <div class="win-dot r"></div><div class="win-dot y"></div><div class="win-dot g"></div>
-      <span style="margin-left:6px">InBox (84 non letti)</span>
-    </div>
-    <div class="win-body">
-      <div class="label">Task Initiation Freeze</div>
-      <div class="main">Messaggi in attesa di risposta</div>
-      <div class="sub">Il blocco della partenza: lo sforzo chimico per iniziare l'azione supera la ricompensa attesa.</div>
-      <div class="win-cta">→ Rompi la paralisi</div>
-    </div>
-  </button>
-
-  <div class="hint" id="hint-text">Seleziona una risorsa. Evita di cliccare i vecchi file sul desktop per non frammentare la memoria di lavoro.</div>
+  <div class="hint" id="hint-text">Clicca sul Punto di Ingresso Clinico. Ignora la spazzatura del desktop e le chiamate simulate.</div>
 
   <div class="taskbar">
     <span class="taskbar-time" id="tclock">--:--</span>
   </div>
 
-  <!-- Modale Clinica -->
-  <div class="overlay" id="ov-error">
+  <div class="overlay" id="ov-success">
     <div class="resource-card">
-      <button class="close-btn" onclick="closeOverlay('ov-error')">×</button>
-      <div class="resource-tag tag-err">Funzioni Esecutive</div>
-      <div class="resource-title">La paralisi non è mancanza di volontà</div>
-      <div class="resource-body">Quando sperimenti l'ADHD Freeze, la corteccia prefrontale fa fatica a regolare il rilascio di dopamina. Il desktop disordinato è lo specchio di una mente in cui ogni informazione ha lo stesso peso visivo e la stessa urgenza.</div>
-      <a class="resource-link" target="_blank" href="https://www.additudemag.com/executive-function-disorder-adhd-explained/">Accedi alle risorse di supporto su ADDitude</a>
+      <button class="close-btn" onclick="closeOverlay()">×</button>
+      <div class="resource-title" style="color:#fff; margin-bottom:12px;">Obiettivo Raggiunto</div>
+      <div class="resource-body" style="color:rgba(150,180,150,0.85); font-size:13.5px; line-height:1.6; margin-bottom:20px;">
+        Hai attraversato l'interferenza sensoriale. Quando stimoli uditivi e visivi simultanei (sveglie, chiamate) competono per l'attenzione, la riserva dopaminergica si esaurisce rapidamente. Questa è la trasposizione digitale dell'esperienza quotidiana dell'ADHD.
+      </div>
+      <a class="resource-link" target="_blank" href="https://chadd.org">Accedi al portale CHADD</a>
     </div>
   </div>
 </div>
@@ -328,231 +178,137 @@
 <script>
 const root = document.getElementById('glitch-root');
 const desktopGrid = document.getElementById('desktop-grid');
-const hint = document.getElementById('hint-text');
-const gbar = document.getElementById('gbar');
 const focusFill = document.getElementById('focus-fill');
 const hudVal = document.getElementById('hud-val');
-const hudText = document.getElementById('hud-text');
-const toastContainer = document.getElementById('toast-container');
+const callBox = document.getElementById('call-box');
+const callAuthor = document.getElementById('call-author');
+const gbar = document.getElementById('gbar');
 
 let focusScore = 100;
-let clickCount = 0;
-let driftIntervals = {};
-let hoverTimers = {};
-let globalGlitchInterval = null;
-let freezeTimer = null;
 let audioCtx = null;
+let ringOsc = null; // Riferimento per bloccare lo squillo della chiamata
+let alarmInterval = null; // Ciclo per la sveglia di panico
 
-// Nomi dei finti file spazzatura per la gamification negativa dello sfondo
-const junkFiles = [
-  { type: "file", name: "screenshot_2025_final.png" },
-  { type: "folder", name: "Nuova Cartella (3)" },
-  { type: "file", name: "Appunti_unibo_bozza.txt" },
-  { type: "file", name: "todo_vecchio_giugno.docx" },
-  { type: "folder", name: "FOTO_DA_SISTEMARE" },
-  { type: "file", name: "cv_aggiornato_2024_v2.pdf" },
-  { type: "file", name: "temp_code_backup.zip" }
-];
+const junkNames = ["Bozza_Inutile.txt", "VecchiaCartella", "Screenshot_92.png", "Fattura_Scaduta.pdf"];
+const callers = ["Lavoro (Urgente)", "Numero Sconosciuto", "Promozione Commerciale", "Promemoria Medico"];
 
-const toastPool = [
-  { h: "WHATSAPP", t: "Mamma", d: "Ti sei ricordato di chiamare l'amministratore?" },
-  { h: "BANCA", t: "Notifica App", d: "Scadenza pagamento fattura: -49.99€" },
-  { h: "LINKEDIN", t: "Aggiornamento", d: "Un tuo contatto ha cambiato lavoro. Fai i complimenti!" }
-];
-
-// Generazione dinamica e procedurale del desktop disordinato
-function generateMessyDesktop() {
-  const totalSlots = 40; // Riempiamo lo schermo di spazzatura cognitiva
-  for (let i = 0; i < totalSlots; i++) {
-    // Decidiamo casualmente se inserire un file o lasciare uno slot vuoto per disordine asimmetrico
-    if (Math.random() > 0.45) {
-      const item = junkFiles[Math.floor(Math.random() * junkFiles.length)];
-      const iconEl = document.createElement('div');
-      iconEl.className = 'bg-icon';
-      
-      iconEl.innerHTML = `
-        <div class="bg-icon-visual ${item.type}"></div>
-        <div class="bg-icon-text">${item.name}</div>
-      `;
-      
-      // Chicca di gamification: cliccare la spazzatura di sfondo drena energia esecutiva
-      iconEl.addEventListener('click', (e) => {
+// Generazione icone di sfondo per simulare disordine reale
+function buildDesktop() {
+  for (let i = 0; i < 30; i++) {
+    if (Math.random() > 0.5) {
+      const icon = document.createElement('div');
+      icon.className = 'bg-icon';
+      icon.innerHTML = `<div class="bg-icon-visual file"></div><div class="bg-icon-text">${junkNames[Math.floor(Math.random()*junkNames.length)]}</div>`;
+      icon.addEventListener('click', (e) => {
         e.stopPropagation();
-        consumeFocus(12); // Forte penalità per interazione con finti stimoli
-        playGlitchSound(90, 0.15);
-        glitchFlash();
-        hint.textContent = "[ Distrazione! Hai cliccato su un vecchio file inutile. -12% Energia ]";
+        consumeFocus(8);
+        playSynthTone(130, 0.1, 'sawtooth');
       });
-      
-      desktopGrid.appendChild(iconEl);
+      desktopGrid.appendChild(icon);
     } else {
-      // Lasciamo uno slot vuoto nella griglia per asimmetria
       desktopGrid.appendChild(document.createElement('div'));
     }
   }
 }
-generateMessyDesktop();
-
-function updateClock() {
-  const now = new Date();
-  document.getElementById('tclock').textContent = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
-}
-updateClock(); setInterval(updateClock, 10000);
+buildDesktop();
 
 function initAudio() {
-  if (!audioCtx) {
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  }
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 }
 
-function playGlitchSound(freq = 120, duration = 0.08) {
+function playSynthTone(freq, duration, type = 'sine') {
   if (!audioCtx) return;
-  try {
-    const osc = audioCtx.createOscillator();
-    const gainNode = audioCtx.createGain();
-    osc.type = 'sawtooth';
-    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-    gainNode.gain.setValueAtTime(0.03, audioCtx.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
-    osc.connect(gainNode);
-    gainNode.connect(audioCtx.destination);
-    osc.start(); osc.stop(audioCtx.currentTime + duration);
-  } catch(e) {}
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = type;
+  osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+  gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+  osc.connect(gain); gain.connect(audioCtx.destination);
+  osc.start(); osc.stop(audioCtx.currentTime + duration);
 }
 
-// Riduzione passiva dell'attenzione
-setInterval(() => {
-  if (!root.classList.contains('freeze') && focusScore > 5) {
-    consumeFocus(0.35);
+// CHICCA SENSORIALE: Avvio dello squillo continuo per la chiamata entrante
+function startRinging() {
+  if (!audioCtx) return;
+  ringOsc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  ringOsc.type = 'sine';
+  ringOsc.frequency.setValueAtTime(440, audioCtx.currentTime); // Tono di squillo standard
+  gain.gain.setValueAtTime(0.03, audioCtx.currentTime);
+  ringOsc.connect(gain); gain.connect(audioCtx.destination);
+  ringOsc.start();
+}
+
+function stopRinging() {
+  if (ringOsc) {
+    try { ringOsc.stop(); } catch(e) {}
+    ringOsc = null;
   }
-}, 250);
+}
+
+// Decremento passivo del focus
+setInterval(() => {
+  if (focusScore > 0) {
+    consumeFocus(0.25);
+  }
+}, 200);
 
 function consumeFocus(amount) {
   focusScore = Math.max(0, focusScore - amount);
   focusFill.style.width = focusScore + '%';
   hudVal.textContent = Math.round(focusScore) + '%';
   
-  if (focusScore < 30) {
-    focusFill.style.backgroundColor = '#ff5f57';
-    hudText.textContent = 'SOVRACCARICO CRITICO';
-    if(clickCount === 0) startChaos();
-  } else if (focusScore < 65) {
-    focusFill.style.backgroundColor = '#febc2e';
-    hudText.textContent = 'Attenzione frammentata...';
+  // Attivazione automatica della SVEGLIA DI PANICO se il focus scende sotto il 40%
+  if (focusScore < 40 && !root.classList.contains('panic')) {
+    root.classList.add('panic');
+    alarmInterval = setInterval(() => {
+      playSynthTone(880, 0.15, 'square'); // Suono acuto di sveglia ad onda quadra
+    }, 500);
   }
 }
 
-// ADHD Freeze Timer
-function resetFreezeTimer() {
-  initAudio();
-  if (root.classList.contains('freeze')) {
-    root.classList.remove('freeze');
-    hint.textContent = 'Flusso riattivato. Trova i veri punti di accesso clinici.';
+// Trigger Chiamate Entranti (Ogni 9 secondi spunta una finta telefonata distruttiva)
+setInterval(() => {
+  if (callBox.style.display !== 'block') {
+    initAudio();
+    callAuthor.textContent = callers[Math.floor(Math.random() * callers.length)];
+    callBox.style.display = 'block';
+    startRinging();
   }
-  clearTimeout(freezeTimer);
-  freezeTimer = setTimeout(() => {
-    root.classList.add('freeze');
-    hint.textContent = '[ ADHD Freeze: Troppi stimoli immobili sul desktop. Cambia posizione o muoviti. ]';
-    playGlitchSound(70, 0.25);
-    consumeFocus(10);
-  }, 6000);
-}
-root.addEventListener('mousemove', resetFreezeTimer);
-root.addEventListener('click', resetFreezeTimer);
-resetFreezeTimer();
+}, 9000);
 
-function spawnToast() {
-  if (root.classList.contains('freeze')) return;
-  const data = toastPool[Math.floor(Math.random() * toastPool.length)];
-  const toast = document.createElement('div');
-  toast.className = 'toast-notification';
-  toast.innerHTML = `
-    <div class="toast-header"><span>${data.h}</span><button class="toast-close">×</button></div>
-    <div class="toast-title">${data.t}</div>
-    <div class="toast-desc">${data.d}</div>
-  `;
-  toast.querySelector('.toast-close').addEventListener('click', (e) => {
-    e.stopPropagation();
-    consumeFocus(5);
-    playGlitchSound(160, 0.05);
-    toast.remove();
-  });
-  toastContainer.appendChild(toast);
-  playGlitchSound(320, 0.08);
-  setTimeout(() => { if(toast.parentNode) toast.remove(); }, 5000);
-}
-setInterval(spawnToast, 7000);
-
-function openOverlay(id) {
-  document.getElementById(id).classList.add('active');
-  stopDrift();
-}
-
-function closeOverlay(id) {
-  document.getElementById(id).classList.remove('active');
-  clickCount++;
-  focusScore = Math.min(100, focusScore + 20);
-  startChaos();
-}
-
-document.querySelectorAll('.win').forEach(win => {
-  win.addEventListener('click', () => openOverlay('ov-error'));
+// Chiusura chiamata (Gamification negativa: se rispondi perdi focus, se rifiuti ti salvi)
+document.getElementById('call-acc').addEventListener('click', (e) => {
+  e.stopPropagation(); stopRinging(); callBox.style.display = 'none';
+  consumeFocus(15); // Task-switching punito pesantemente
+});
+document.getElementById('call-dec').addEventListener('click', (e) => {
+  e.stopPropagation(); stopRinging(); callBox.style.display = 'none';
+  playSynthTone(200, 0.05);
 });
 
-function glitchFlash() {
-  gbar.style.display = 'block';
-  gbar.style.top = Math.random() * window.innerHeight + 'px';
-  setTimeout(() => { gbar.style.display = 'none'; }, 60);
+document.getElementById('win-main').addEventListener('click', () => {
+  document.getElementById('ov-success').classList.add('active');
+  clearInterval(alarmInterval);
+  root.classList.remove('panic');
+  stopRinging();
+});
+
+function closeOverlay() {
+  document.getElementById('ov-success').classList.remove('active');
+  focusScore = 100;
 }
 
-function driftWindow(el, id) {
-  if (driftIntervals[id]) return;
-  driftIntervals[id] = setInterval(() => {
-    const maxX = window.innerWidth - el.offsetWidth - 25;
-    const maxY = window.innerHeight - el.offsetHeight - 60;
-    const curL = el.offsetLeft;
-    const curT = el.offsetTop;
-    const dx = (Math.random() - 0.5) * 160;
-    const dy = (Math.random() - 0.5) * 120;
-    el.style.left = Math.max(15, Math.min(maxX, curL + dx)) + 'px';
-    el.style.top = Math.max(15, Math.min(maxY, curT + dy)) + 'px';
-    if(Math.random() > 0.5) playGlitchSound(110, 0.04);
-    glitchFlash();
-  }, 1600 + Math.random() * 800);
-}
-
-function stopDrift() {
-  Object.keys(driftIntervals).forEach(k => { clearInterval(driftIntervals[k]); delete driftIntervals[k]; });
-}
-
-function startChaos() {
-  const wins = ['win-error','win-slack','win-cal','win-mail'];
-  wins.forEach(id => driftWindow(document.getElementById(id), id));
-  if (!globalGlitchInterval) {
-    globalGlitchInterval = setInterval(glitchFlash, 2500);
+// Logica di fuga della finestra principale se ci si avvicina con ansia o lentezza
+document.getElementById('win-main').addEventListener('mouseenter', () => {
+  if (focusScore < 75) {
+    const maxX = window.innerWidth - 320;
+    const maxY = window.innerHeight - 200;
+    document.getElementById('win-main').style.left = Math.max(20, Math.random() * maxX) + 'px';
+    document.getElementById('win-main').style.top = Math.max(20, Math.random() * maxY) + 'px';
+    playSynthTone(300, 0.06, 'sawtooth');
   }
-}
-
-const wins = document.querySelectorAll('.win');
-wins.forEach(win => {
-  win.addEventListener('mouseenter', () => {
-    wins.forEach(w => { if (w.id !== win.id) w.classList.add('distracted'); });
-    hoverTimers[win.id] = setTimeout(() => {
-      if (clickCount >= 0 || focusScore < 85) {
-        const maxX = window.innerWidth - win.offsetWidth - 25;
-        const maxY = window.innerHeight - win.offsetHeight - 60;
-        win.style.left = Math.max(25, Math.random() * maxX) + 'px';
-        win.style.top = Math.max(25, Math.random() * maxY) + 'px';
-        consumeFocus(3);
-        playGlitchSound(200, 0.05);
-        glitchFlash();
-      }
-    }, 750);
-  });
-  win.addEventListener('mouseleave', () => {
-    clearTimeout(hoverTimers[win.id]);
-    wins.forEach(w => w.classList.remove('distracted'));
-  });
 });
 </script>
 </body>
