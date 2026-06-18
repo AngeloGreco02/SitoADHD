@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cognitive Overload Engine - Final Stable Build</title>
+  <title>Cognitive Overload Engine - Total Chaos Build</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body, html { width: 100%; height: 100%; overflow: hidden; background: #07080c; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
@@ -29,21 +29,22 @@
     .focus-bar-bg { width: 100%; height: 6px; background: rgba(255, 255, 255, 0.08); border-radius: 3px; overflow: hidden; }
     .focus-bar-fill { width: 100%; height: 100%; background: #28c840; transition: width 0.2s linear; }
 
-    /* Schede e Finestre operative */
-    .win { position: absolute; background: rgba(15, 16, 24, 0.97); border: 0.5px solid rgba(100,200,100,0.2); border-radius: 8px; box-shadow: 0 15px 45px rgba(0,0,0,0.6); z-index: 10; cursor: pointer; transition: left 0.35s cubic-bezier(0.16, 1, 0.3, 1), top 0.35s cubic-bezier(0.16, 1, 0.3, 1); }
+    /* Schede fluttuanti (Aggiunto transition fluido per i movimenti impazziti) */
+    .win { position: absolute; background: rgba(15, 16, 24, 0.97); border: 0.5px solid rgba(100,200,100,0.2); border-radius: 8px; box-shadow: 0 15px 45px rgba(0,0,0,0.6); z-index: 10; cursor: pointer; transition: left 1.2s cubic-bezier(0.1, 0.8, 0.3, 1), top 1.2s cubic-bezier(0.1, 0.8, 0.3, 1), border-color 0.2s; }
+    .win:hover { border-color: rgba(100,200,100,0.5); z-index: 40; }
     .win-title { display: flex; align-items: center; gap: 6px; padding: 10px 12px; border-bottom: 0.5px solid rgba(100,200,100,0.12); font-size: 11px; color: rgba(160,200,160,0.7); font-family: monospace; }
     .win-dot { width: 7px; height: 7px; border-radius: 50%; background: #eceff1; }
     .win-body { padding: 14px; font-size: 12px; color: rgba(150,180,150,0.9); }
     .win-cta { margin-top: 10px; padding: 6px; font-size: 11px; background: rgba(40,200,80,0.06); border: 0.5px solid rgba(40,200,80,0.2); border-radius: 4px; color: #28c840; text-align: center; font-family: monospace; }
 
-    /* Widget To-Do List */
+    /* Finestra To-Do List */
     .todo-widget { width: 280px; left: 40px; top: 120px; }
     .todo-list { list-style: none; margin-top: 8px; display: flex; flex-direction: column; gap: 6px; max-height: 180px; overflow-y: auto; }
     .todo-item { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.02); padding: 6px 8px; border-radius: 4px; font-family: monospace; font-size: 11px; }
     .todo-item input[type="checkbox"] { cursor: pointer; filter: hue-rotate(90deg); }
 
-    /* Overlay Chiamate & Notifiche */
-    .incoming-call-overlay { position: absolute; top: 30px; left: 50%; transform: translateX(-50%); width: 360px; background: #141520; border: 1px solid #febc2e; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.8); z-index: 190; padding: 16px; display: none; }
+    /* Overlay Chiamate Moderne (Anch'esso reso fluttuante) */
+    .incoming-call-overlay { position: absolute; top: 30px; left: 35vw; width: 360px; background: #141520; border: 1px solid #febc2e; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.8); z-index: 190; padding: 16px; display: none; transition: left 1.2s ease, top 1.2s ease; }
     .call-actions { display: flex; gap: 10px; margin-top: 10px; }
     .call-btn { flex: 1; padding: 8px; border: none; border-radius: 6px; font-family: monospace; cursor: pointer; font-weight: bold; color: #fff; }
     
@@ -96,12 +97,12 @@
     </div>
   </div>
 
-  <div class="win" id="win-main" style="left: 45vw; top: 35vh; width: 280px;">
+  <div class="win" id="win-main" style="left: 45vw; top: 40vh; width: 280px;">
     <div class="win-title"><div class="win-dot" style="background:#28c840"></div><span>executive_hub.exe</span></div>
     <div class="win-body">
-      <div class="main" style="font-weight:bold; color:#fff;">Ancoraggio Cognitivo</div>
-      <div style="font-size:11px; margin-top:4px; color:rgba(150,180,150,0.8);">Clicca qui per stabilizzare il sistema prima che il Focus vada a zero.</div>
-      <div class="win-cta">→ Avvia Stabilizzazione</div>
+      <div class="main" style="font-weight:bold; color:#fff;">Risorsa Clinica</div>
+      <div style="font-size:11px; margin-top:4px; color:rgba(150,180,150,0.8);">Interfaccia di ancoraggio. Clicca per accedere alle documentazioni scientifiche.</div>
+      <div class="win-cta">→ Apri Risorse</div>
     </div>
   </div>
 
@@ -120,7 +121,7 @@
   </div>
 
   <div id="toast-container"></div>
-  <div class="hint" id="hint-text">Rimani calmo. Segui traiettorie lineari col mouse per indurre l'Hyperfocus.</div>
+  <div class="hint" id="hint-text">Rimani calmo. Le finestre si muovono da sole. Segui traiettorie lineari col mouse per l'Hyperfocus.</div>
   <div class="taskbar"><span class="taskbar-time" id="tclock">--:--</span></div>
 
   <div class="analytics-overlay" id="analytics-screen">
@@ -154,6 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let telemetry = { subTasks: 0, falseClicks: 0, hyperStates: 0, startTime: Date.now(), focusHistory: [] };
   let focusScore = 100;
   let audioCtx = null;
+  let ringInterval = null; // Gestione del ciclo ripetuto dello squillo acustico
   let linearPoints = [];
   let hyperfocusTimer = 0;
   let isHyperfocused = false;
@@ -161,7 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const callers = ["Direzione", "Sconosciuto", "Mamma", "Banca (Importante)"];
   const toastPool = ["Nuova mail di lavoro", "Hai dimenticato una scadenza?", "Aggiornamento di sistema pronto", "Notifica di messaggistica"];
 
-  // 1. Generazione icone sul desktop disordinato
+  // Generazione icone sul desktop disordinato di sfondo
   for (let i = 0; i < 40; i++) {
     if (Math.random() > 0.5) {
       const icon = document.createElement('div');
@@ -177,35 +179,52 @@ document.addEventListener('DOMContentLoaded', () => {
     const now = new Date();
     document.getElementById('tclock').textContent = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
   }
-  updateClock(); 
-  setInterval(updateClock, 10000);
+  updateClock(); setInterval(updateClock, 10000);
 
   function initAudio() {
     if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   }
 
-  function playSynthTone(freq, duration, type = 'sine') {
+  function playSynthTone(freq, duration, type = 'sine', volume = 0.02) {
     if (!audioCtx) return;
     try {
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
       osc.type = type;
       osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-      gain.gain.setValueAtTime(0.02, audioCtx.currentTime);
+      gain.gain.setValueAtTime(volume, audioCtx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
       osc.connect(gain); gain.connect(audioCtx.destination);
       osc.start(); osc.stop(audioCtx.currentTime + duration);
     } catch(e) {}
   }
 
-  // 2. Loop del battito cardiaco procedurale (Stress Acustico)
+  // Motore di movimento autonomo impazzito (Drifting Engine automatico all'avvio)
+  function makeWindowDrift(element) {
+    setInterval(() => {
+      if (focusScore <= 0 || isHyperfocused) return;
+      // Genera coordinate casuali mantenendo gli elementi all'interno del monitor dell'utente
+      const maxX = window.innerWidth - element.offsetWidth - 30;
+      const maxY = window.innerHeight - element.offsetHeight - 60;
+      
+      element.style.left = Math.max(20, Math.random() * maxX) + 'px';
+      element.style.top = Math.max(40, Math.random() * maxY) + 'px';
+    }, 2000 + Math.random() * 1000); // Cambia traiettoria ogni 2-3 secondi in modo asincrono
+  }
+
+  // Attiviamo il movimento autonomo su tutte le finestre principali
+  makeWindowDrift(document.getElementById('todo-box'));
+  makeWindowDrift(document.getElementById('win-main'));
+  makeWindowDrift(callBox);
+
+  // Loop passivo del battito cardiaco di sottofondo
   setInterval(() => {
     if (focusScore <= 0 || !audioCtx) return;
     let isCritical = focusScore < 30;
-    playSynthTone(isCritical ? 85 : 55, isCritical ? 0.1 : 0.18, 'sine');
+    playSynthTone(isCritical ? 85 : 55, isCritical ? 0.1 : 0.18, 'sine', 0.03);
   }, 750);
 
-  // 3. To-Do List Fallimentare gestita con Event Delegation stabile
+  // To-Do List dinamica fallimentare
   todoMasterList.addEventListener('change', (e) => {
     if (e.target && e.target.matches('input[type="checkbox"]')) {
       e.preventDefault();
@@ -213,18 +232,16 @@ document.addEventListener('DOMContentLoaded', () => {
       telemetry.subTasks++;
       consumeFocus(5);
       
-      e.target.style.transform = `translate(${Math.random()*12 - 6}px, ${Math.random()*12 - 6}px)`;
-      
       const newLi = document.createElement('li');
       newLi.className = 'todo-item';
       newLi.style.paddingLeft = "15px";
       newLi.style.borderLeft = "1px solid #ff5f57";
-      newLi.innerHTML = `<input type="checkbox"> <span style="color:#ff7f7f;">Sotto-compito improvviso</span>`;
+      newLi.innerHTML = `<input type="checkbox"> <span style="color:#ff7f7f;">Sotto-compito generato</span>`;
       todoMasterList.insertBefore(newLi, e.target.closest('li').nextSibling);
     }
   });
 
-  // 4. Analisi traiettoria del mouse per Hyperfocus
+  // Calcolo dell'Hyperfocus tramite traiettorie pulite
   root.addEventListener('mousemove', (e) => {
     initAudio();
     if (isHyperfocused) return;
@@ -264,29 +281,41 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 5000);
   }
 
-  // Spawn asincrono di notifiche toast distorcenti
+  // Notifiche Toast laterali
   setInterval(() => {
     if (focusScore <= 0 || isHyperfocused) return;
     const toast = document.createElement('div');
     toast.className = 'toast-notification';
     toast.textContent = toastPool[Math.floor(Math.random() * toastPool.length)];
     toastContainer.appendChild(toast);
-    playSynthTone(300, 0.08, 'sine');
+    playSynthTone(300, 0.08, 'sine', 0.02);
     setTimeout(() => toast.remove(), 4000);
   }, 6000);
 
-  // Trigger Chiamate Invasive
+  // RISOLUZIONE: Gestione delle chiamate con squillo acustico ad anello continuo
   setInterval(() => {
     if (focusScore <= 0 || callBox.style.display === 'block' || isHyperfocused) return;
     document.getElementById('call-author').textContent = callers[Math.floor(Math.random() * callers.length)];
     callBox.style.display = 'block';
-    playSynthTone(440, 0.5, 'sine');
-  }, 10000);
+    
+    // Inizia l'anello dello squillo telefonico continuo (suona ripetutamente ogni 1.4s)
+    ringInterval = setInterval(() => {
+      playSynthTone(580, 0.4, 'sine', 0.05); // Tono squillo udibile squillante
+      setTimeout(() => { playSynthTone(580, 0.4, 'sine', 0.05); }, 200);
+    }, 1400);
+  }, 11000);
 
-  document.getElementById('call-acc').addEventListener('click', (e) => { e.stopPropagation(); callBox.style.display = 'none'; consumeFocus(12); });
-  document.getElementById('call-dec').addEventListener('click', (e) => { e.stopPropagation(); callBox.style.display = 'none'; });
+  function stopPhoneRing() {
+    if (ringInterval) {
+      clearInterval(ringInterval);
+      ringInterval = null;
+    }
+  }
 
-  // Consumo progressivo passivo della barra di focus
+  document.getElementById('call-acc').addEventListener('click', (e) => { e.stopPropagation(); stopPhoneRing(); callBox.style.display = 'none'; consumeFocus(12); });
+  document.getElementById('call-dec').addEventListener('click', (e) => { e.stopPropagation(); stopPhoneRing(); callBox.style.display = 'none'; });
+
+  // Consumo progressivo della riserva energetica attentiva
   setInterval(() => {
     if (focusScore > 0 && !isHyperfocused) {
       focusScore = Math.max(0, focusScore - 0.5);
@@ -295,7 +324,7 @@ document.addEventListener('DOMContentLoaded', () => {
       telemetry.focusHistory.push(Math.round(focusScore));
       
       if (focusScore < 30 && !root.classList.contains('panic')) root.classList.add('panic');
-      if (focusScore <= 0) renderEndDashboard();
+      if (focusScore <= 0) { stopPhoneRing(); renderEndDashboard(); }
     }
   }, 250);
 
@@ -324,16 +353,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
   desktopGrid.addEventListener('click', () => { telemetry.falseClicks++; consumeFocus(8); });
 
-  // Meccanica di fuga e drifting della scheda principale (Risolto errore di sintassi 'new NewL')
+  // Movimento repulsivo aggiuntivo se l'utente tenta di inseguire la risorsa centrale con movimenti non fluidi
   document.getElementById('win-main').addEventListener('mouseenter', () => {
-    if (focusScore < 65 && !isHyperfocused) {
-      document.getElementById('win-main').style.left = Math.random() * (window.innerWidth - 300) + 'px';
-      document.getElementById('win-main').style.top = Math.random() * (window.innerHeight - 200) + 'px';
+    if (focusScore < 85 && !isHyperfocused) {
+      const maxX = window.innerWidth - 300;
+      const maxY = window.innerHeight - 200;
+      document.getElementById('win-main').style.left = Math.random() * maxX + 'px';
+      document.getElementById('win-main').style.top = Math.random() * maxY + 'px';
       consumeFocus(2);
+      playSynthTone(240, 0.05, 'sawtooth', 0.02);
     }
   });
 
-  document.getElementById('win-main').addEventListener('click', () => { if(focusScore > 0) renderEndDashboard(); });
+  document.getElementById('win-main').addEventListener('click', () => { if(focusScore > 0) { stopPhoneRing(); renderEndDashboard(); } });
 });
 </script>
 </body>
