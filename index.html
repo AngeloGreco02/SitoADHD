@@ -3,13 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ExecutiveChaos - Interactive Tutorial Build</title>
+  <title>ExecutiveChaos & ObsessiveLoop - Clinical Simulator</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body, html { width: 100%; height: 100%; overflow: hidden; background: #07080c; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     #glitch-root { width: 100vw; height: 100vh; position: relative; overflow: hidden; cursor: default; user-select: none; }
     
-    /* Griglia desktop disordinato reale */
+    /* SCHERMATA MENU INIZIALE STRUTTURATA A 4 TASTI */
+    .menu-overlay { position: absolute; inset: 0; background: rgba(9, 10, 15, 0.99); z-index: 300; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.5s ease; }
+    .menu-card { background: #11131e; border: 1px solid rgba(100, 255, 100, 0.15); border-radius: 14px; padding: 35px; text-align: center; max-width: 500px; width: 92%; box-shadow: 0 25px 60px rgba(0,0,0,0.85); }
+    .menu-title { font-size: 34px; color: #fff; font-family: monospace; letter-spacing: -1px; margin-bottom: 4px; font-weight: bold; }
+    .menu-subtitle { font-size: 11px; color: #626779; font-family: monospace; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px; }
+    
+    .menu-section-title { font-size: 11px; color: #8e93a2; font-family: monospace; text-align: left; margin: 10px 0 6px; text-transform: uppercase; font-weight: bold; }
+    .menu-btn-group { display: flex; gap: 10px; margin-bottom: 14px; }
+    
+    .menu-btn { display: block; width: 100%; padding: 12px; border: none; border-radius: 6px; font-family: monospace; font-size: 12px; font-weight: bold; cursor: pointer; transition: all 0.2s; }
+    .menu-btn.play-adhd { background: #28c840; color: #fff; }
+    .menu-btn.play-adhd:hover { background: #2ed94b; }
+    .menu-btn.play-doc { background: #ff5f57; color: #fff; }
+    .menu-btn.play-doc:hover { background: #ff746d; }
+    .menu-btn.guide-btn { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); color: #bcbfca; }
+    .menu-btn.guide-btn:hover { background: rgba(255,255,255,0.08); color: #fff; }
+
+    /* Griglia Desktop (Modulo ADHD) */
     .desktop-bg { position: absolute; inset: 0; background-color: #0c0d14; background-size: 40px 40px; display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); grid-template-rows: repeat(auto-fill, minmax(100px, 1fr)); gap: 20px; padding: 30px; z-index: 0; }
     .bg-icon { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; opacity: 0.35; padding: 6px; border-radius: 6px; z-index: 1; }
     .bg-icon-visual { width: 24px; height: 24px; margin-bottom: 4px; position: relative; }
@@ -19,29 +36,17 @@
     .bg-icon-visual.pdf::before { content: 'PDF'; position: absolute; bottom: 1px; left: 2px; font-size: 7px; font-family: monospace; color: #fff; font-weight: bold; }
     .bg-icon-text { font-size: 9px; color: #8e93a2; font-family: monospace; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; width: 100%; }
 
-    /* Evidenziatore dinamico per il tutorial interattivo */
-    .tutorial-highlight { box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.85), 0 0 15px #28c840 !important; z-index: 400 !important; pointer-events: all !important; }
-
-    /* Schermata Menu Iniziale */
-    .menu-overlay { position: absolute; inset: 0; background: rgba(11, 12, 20, 0.98); z-index: 300; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.5s ease; }
-    .menu-card { background: #121420; border: 1px solid rgba(100, 255, 100, 0.2); border-radius: 12px; padding: 40px; text-align: center; max-width: 450px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.8); }
-    .menu-title { font-size: 32px; color: #fff; font-family: monospace; letter-spacing: -1px; margin-bottom: 8px; font-weight: bold; }
-    .menu-subtitle { font-size: 12px; color: #6c7180; font-family: monospace; margin-bottom: 30px; text-transform: uppercase; }
-    .menu-btn { display: block; width: 100%; padding: 14px; margin-bottom: 12px; border: none; border-radius: 6px; font-family: monospace; font-size: 13px; font-weight: bold; cursor: pointer; transition: all 0.2s; }
-    .menu-btn.btn-play { background: #28c840; color: #fff; box-shadow: 0 4px 15px rgba(40,200,80,0.2); }
-    .menu-btn.btn-guide { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); color: #bcbfca; }
-
-    /* HUD */
-    .hud-container { position: absolute; top: 20px; left: 20px; z-index: 150; background: rgba(10, 11, 16, 0.95); padding: 14px 20px; border-radius: 8px; border: 0.5px solid rgba(100, 255, 100, 0.15); min-width: 260px; }
+    /* HUD Riserva (ADHD) */
+    .hud-container { position: absolute; top: 20px; left: 20px; z-index: 150; background: rgba(10, 11, 16, 0.95); padding: 14px 20px; border-radius: 8px; border: 0.5px solid rgba(100, 255, 100, 0.15); min-width: 260px; display: none; }
     .hud-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
     .hud-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: rgba(100, 255, 100, 0.8); font-family: monospace; }
     .hud-value { font-size: 11px; font-family: monospace; color: #fff; }
     .focus-bar-bg { width: 100%; height: 6px; background: rgba(255, 255, 255, 0.08); border-radius: 3px; overflow: hidden; }
     .focus-bar-fill { width: 100%; height: 100%; background: #28c840; transition: width 0.2s linear; }
 
-    /* Finestre con Codice Colore */
-    .win { position: absolute; background: rgba(14, 15, 23, 0.98); border-radius: 8px; box-shadow: 0 15px 45px rgba(0,0,0,0.6); z-index: 10; cursor: pointer; transition: left 1.2s cubic-bezier(0.1, 0.8, 0.3, 1), top 1.2s cubic-bezier(0.1, 0.8, 0.3, 1), border-color 0.2s; }
-    .win-title { display: flex; align-items: center; gap: 6px; padding: 10px 12px; border-bottom: 0.5px solid rgba(255,255,255,0.08); font-size: 11px; color: rgba(255,255,255,0.6); font-family: monospace; }
+    /* Finestre collegate all'ADHD */
+    .win { position: absolute; background: rgba(14, 15, 23, 0.98); border-radius: 8px; box-shadow: 0 15px 45px rgba(0,0,0,0.6); z-index: 10; cursor: pointer; display: none; transition: left 1.2s cubic-bezier(0.1, 0.8, 0.3, 1), top 1.2s cubic-bezier(0.1, 0.8, 0.3, 1); }
+    .win-title { display: flex; align-items: center; gap: 6px; padding: 10px 12px; border-bottom: 0.5px solid rgba(255,255,255,0.08); font-size: 11px; font-family: monospace; }
     .win-dot { width: 7px; height: 7px; border-radius: 50%; background: #eceff1; }
     .win-body { padding: 14px; font-size: 12px; color: rgba(160,180,160,0.9); line-height: 1.5; }
     .win-body .label { font-size: 9.5px; opacity: 0.5; margin-bottom: 4px; font-family: monospace; }
@@ -57,12 +62,11 @@
     .win.freeze-purple { border: 0.5px solid rgba(171, 71, 188, 0.4); }
     .win.freeze-purple .win-cta { background: rgba(171, 71, 188, 0.08); border: 0.5px solid rgba(171, 71, 188, 0.3); color: #ab47bc; }
 
-    /* Chiamate */
+    /* Chiamate asincrone ADHD */
     .incoming-call-box { width: 340px; background: #141520; border: 1px solid #febc2e; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.8); z-index: 110; padding: 16px; }
     .incoming-call-box.active-call { border-color: #28c840; background: #0e1410; }
     .call-info { display: flex; align-items: center; gap: 12px; }
     .call-avatar { width: 36px; height: 36px; background: #febc2e; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-    .incoming-call-box.active-call .call-avatar { background: #28c840; }
     .call-actions { display: flex; gap: 10px; margin-top: 12px; }
     .call-btn { flex: 1; padding: 8px; border: none; border-radius: 6px; font-family: monospace; cursor: pointer; font-weight: bold; color: #fff; text-align: center; }
 
@@ -72,7 +76,19 @@
     #glitch-root.panic .panic-alarm-banner { animation: blinkAlarm 0.4s infinite; }
     @keyframes blinkAlarm { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
 
-    /* Overlay Modali Tutorial / Risorse */
+    /* MODULO INTERATTIVO VIRTUAL-DOC (IL SITO OBSESSIVELOOP) */
+    .doc-container { position: absolute; inset: 0; background: #090a10; z-index: 50; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+    .doc-card { background: #121422; border: 1px solid #ff5f57; border-radius: 12px; padding: 30px; width: 100%; max-width: 520px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.8); }
+    .doc-title { font-size: 22px; color: #ff5f57; font-family: monospace; font-weight: bold; text-transform: uppercase; margin-bottom: 6px; }
+    .doc-msg { font-size: 13px; color: #bcbfca; margin-bottom: 20px; line-height: 1.5; font-family: monospace; min-height: 50px; background: rgba(255,255,255,0.02); padding: 10px; border-radius: 4px; }
+    .doc-btn-grid { display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; }
+    .doc-action-btn { width: 100%; padding: 12px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.02); color: #fff; border-radius: 6px; cursor: pointer; font-family: monospace; font-size: 12px; text-align: left; transition: all 0.2s; }
+    .doc-action-btn:hover { background: rgba(255,95,87,0.1); border-color: #ff5f57; }
+    
+    /* Bottone terapeutico nascosto inizialmente */
+    .doc-help-btn { width: 100%; padding: 14px; background: #28c840; color: #fff; border: none; border-radius: 6px; font-family: monospace; font-weight: bold; cursor: pointer; margin-top: 10px; display: none; box-shadow: 0 4px 15px rgba(40,200,80,0.3); font-size: 13px; text-align: center; }
+
+    /* Modali Tutorial / Risorse Cliniche */
     .overlay { position: absolute; inset: 0; background: rgba(4,4,6,0.96); z-index: 200; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s ease; }
     .overlay.active { display: flex; opacity: 1; pointer-events: all; }
     .resource-card { background: #0e0e14; border-radius: 12px; padding: 32px; max-width: 440px; width: 92%; position: relative; text-align: center; }
@@ -97,13 +113,22 @@
 <body>
 
 <div id="glitch-root">
-  <!-- MENU INIZIALE -->
   <div class="menu-overlay" id="main-menu">
     <div class="menu-card">
       <div class="menu-title">ExecutiveChaos</div>
-      <div class="menu-subtitle">ADHD Cognitive Overload Simulator</div>
-      <button class="menu-btn btn-play" id="btn-start-game">PLAY / AVVIA ESPERIENZA</button>
-      <button class="menu-btn btn-guide" id="btn-open-guide">COME GIOCARE (TUTORIAL)</button>
+      <div class="menu-subtitle">Neurodivergent UX Experiential Engine</div>
+      
+      <div class="menu-section-title">Modulo 1: ADHD Simulator</div>
+      <div class="menu-btn-group">
+        <button class="menu-btn play-adhd" id="btn-start-adhd">AVVIA ATTENZIONE</button>
+        <button class="menu-btn guide-btn" id="btn-tut-adhd">TUTORIAL</button>
+      </div>
+
+      <div class="menu-section-title">Modulo 2: ObsessiveLoop (DOC)</div>
+      <div class="menu-btn-group">
+        <button class="menu-btn play-doc" id="btn-start-doc">AVVIA RITUALE</button>
+        <button class="menu-btn guide-btn" id="btn-tut-doc">TUTORIAL</button>
+      </div>
     </div>
   </div>
 
@@ -111,41 +136,51 @@
   <div class="desktop-bg" id="desktop-grid"></div>
   <div class="glitch-bar" id="gbar"></div>
 
-  <div class="hud-container">
-    <div class="hud-header">
-      <div class="hud-label">Capacità Esecutiva</div>
-      <div class="hud-value" id="hud-val">100%</div>
-    </div>
-    <div class="focus-bar-bg">
-      <div class="focus-bar-fill" id="focus-fill"></div>
+  <div class="doc-container" id="doc-module">
+    <div class="doc-card">
+      <div class="doc-title">PENSIERO INTRUSIVO</div>
+      <div class="doc-msg" id="doc-feedback-screen">Cosa faccio con questo pensiero? Scegli un'opzione di fuga.</div>
+      
+      <div class="doc-btn-grid">
+        <button class="doc-action-btn" data-doc="ignora">→ Ignora il pensiero (Prova a distrarti)</button>
+        <button class="doc-action-btn" data-doc="respira">→ Rilassati (Esegui tecniche di mindfulness)</button>
+        <button class="doc-action-btn" data-doc="procedi">→ Vai avanti (Ignora e procedi con le attività)</button>
+      </div>
+
+      <button class="doc-help-btn" id="btn-doc-help">→ CHIEDI AIUTO PROFESSIONALE (SPEZZA IL LOOP)</button>
     </div>
   </div>
 
-  <!-- LE FINESTRE COLORE SEMANTICO -->
-  <div class="win err-red" id="win-error" style="left: 10vw; top: 22vh; width: 280px;"><div class="win-title"><div class="win-dot"></div><span>errore_sistema.exe</span></div><div class="win-body"><div class="label">EXCEPTION_0x0F</div><div class="main">Applicazione bloccata</div><div class="win-cta">→ apri diagnosi</div></div></div>
+  <div class="hud-container" id="hud-box">
+    <div class="hud-header"><div class="hud-label">Capacità Esecutiva</div><div class="hud-value" id="hud-val">100%</div></div>
+    <div class="focus-bar-bg"><div class="focus-bar-fill" id="focus-fill"></div></div>
+  </div>
+
+  <div class="win err-red" id="win-error" style="left: 10vw; top: 18vh; width: 280px;"><div class="win-title"><div class="win-dot"></div><span>errore_sistema.exe</span></div><div class="win-body"><div class="label">EXCEPTION_0x0F</div><div class="main">Applicazione bloccata</div><div class="win-cta">→ apri diagnosi</div></div></div>
   <div class="win social-blue" id="win-slack" style="right: 15vw; top: 15vh; width: 270px;"><div class="win-title"><div class="win-dot"></div><span>slack — #general</span></div><div class="win-body"><div class="label">3 messaggi</div><div class="main">Nuova notifica team</div><div class="win-cta">→ apri slack</div></div></div>
   <div class="win time-yellow" id="win-cal" style="left: 15vw; bottom: 22vh; width: 280px;"><div class="win-title"><div class="win-dot"></div><span>calendario — promemoria</span></div><div class="win-body"><div class="label">⚠ TIMEOUT IMMINENTE</div><div class="main">Scadenza progetto fra poco</div><div class="win-cta">→ apri calendario</div></div></div>
   <div class="win freeze-purple" id="win-mail" style="right: 12vw; bottom: 28vh; width: 260px;"><div class="win-title"><div class="win-dot"></div><span>gmail — inbox (47)</span></div><div class="win-body"><div class="label">47 non letti</div><div class="main">Sollecito consegna report</div><div class="win-cta">→ apri gmail</div></div></div>
 
   <div id="toast-container"></div>
-  <div class="hint" id="hint-text">Seleziona un elemento operativo.</div>
+  <div class="hint" id="hint-text">Seleziona un elemento operativo per iniziare l'analisi.</div>
   <div class="taskbar"><span class="taskbar-time" id="tclock">--:--</span></div>
 
-  <!-- WIDGET MODALE TUTORIAL INTERATTIVO STEP-BY-STEP -->
   <div class="overlay" id="ov-tutorial-step">
     <div class="resource-card card-tutorial">
-      <div class="resource-tag" style="background:rgba(40,200,80,0.15); color:#28c840;" id="tut-step-tag">Fase 1 di 3</div>
-      <div class="resource-title" id="tut-step-title">Il Desktop Frammentato</div>
-      <div class="resource-body" id="tut-step-body">Lo sfondo dello schermo è cosparso di file inutili. Cliccare su uno di essi per errore drenerà la tua Capacità Esecutiva. Trova la risorsa clinica reale ed evitalo.</div>
+      <button class="close-btn" id="btn-close-tut">×</button>
+      <div class="resource-tag" style="background:rgba(40,200,80,0.15); color:#28c840;" id="tut-step-tag">Tutorial</div>
+      <div class="resource-title" id="tut-step-title">Titolo Guida</div>
+      <div class="resource-body" id="tut-step-body">Testo esplicativo del modulo selezionato.</div>
       <button class="resource-link" id="btn-tut-next" style="background:rgba(40,200,80,0.2); border:1px solid #28c840; color:#28c840;">AVANTI</button>
     </div>
   </div>
 
-  <!-- Modali Cliniche -->
-  <div class="overlay" id="ov-error"><div class="resource-card card-red"><button class="close-btn" onclick="closeOverlay('ov-error')">×</button><div class="resource-tag" style="background:rgba(255,95,87,0.15); color:#ff5f57;">executive function</div><div class="resource-title">Disfunzione Esecutiva</div><div class="resource-body">Questa sensazione di blocco invalida la pianificazione e l'avvio sequenziale dei compiti.</div><a class="resource-link" target="_blank" href="https://chadd.org/about-adhd/executive-function-skills/">→ Guida Clinica CHADD</a></div></div>
+  <div class="overlay" id="ov-error"><div class="resource-card card-red"><button class="close-btn" onclick="closeOverlay('ov-error')">×</button><div class="resource-tag" style="background:rgba(255,95,87,0.15); color:#ff5f57;">executive function</div><div class="resource-title">Disfunzione Esecutiva</div><div class="resource-body">Questa sensazione di blocco involve la pianificazione e l'avvio sequenziale dei compiti.</div><a class="resource-link" target="_blank" href="https://chadd.org/about-adhd/executive-function-skills/">→ Guida Clinica CHADD</a></div></div>
   <div class="overlay" id="ov-slack"><div class="resource-card card-blue"><button class="close-btn" onclick="closeOverlay('ov-slack')">×</button><div class="resource-tag" style="background:rgba(66,165,245,0.15); color:#42a5f5;">comunità di supporto</div><div class="resource-title">Saturazione Comunicativa</div><div class="resource-body">La gestione della comunicazione asincrona richiede un carico chimico superiore al previsto.</div><a class="resource-link" target="_blank" href="https://www.reddit.com/r/ADHD/">→ Forum r/ADHD</a></div></div>
   <div class="overlay" id="ov-cal"><div class="resource-card card-yellow"><button class="close-btn" onclick="closeOverlay('ov-cal')">×</button><div class="resource-tag" style="background:rgba(254,188,46,0.15); color:#febc2e;">gestione delle scadenze</div><div class="resource-title">Time Blindness</div><div class="resource-body">La distorsione della percezione temporale lineare: i compiti imminenti generano paralisi o risposte ansiose.</div><a class="resource-link" target="_blank" href="https://www.additudemag.com/time-management-strategies-adhd-adults/">→ Analisi su ADDitude</a></div></div>
   <div class="overlay" id="ov-mail"><div class="resource-card card-purple"><button class="close-btn" onclick="closeOverlay('ov-mail')">×</button><div class="resource-tag" style="background:rgba(171,71,188,0.15); color:#ab47bc;">paralisi da avvio</div><div class="resource-title">Task Initiation Freeze</div><div class="resource-body">Difficoltà neurologica ad avviare un'azione pianificata a causa del deficit di regolazione dopaminergica.</div><a class="resource-link" target="_blank" href="https://www.additudemag.com/adhd-paralysis-freeze-stuck/">→ Report di sblocco</a></div></div>
+
+  <div class="overlay" id="ov-doc-success"><div class="resource-card card-red" style="border-color:#28c840;"><button class="close-btn" onclick="document.getElementById('ov-doc-success').classList.remove('active'); window.location.reload();">×</button><div class="resource-tag" style="background:rgba(40,200,80,0.15); color:#28c840;">Uscita dal Loop Raggiunta</div><div class="resource-title">Il Percorso Terapeutico</div><div class="resource-body">Sfondando il muro delle tre opzioni ricorsive, hai appreso la logica clinica del DOC: la soluzione non risiede in una strategia autonoma presentata dal disturbo (i rituali), ma nella rottura dello schema tramite la richiesta di aiuto professionale esterno.</div><button class="resource-link" onclick="window.location.reload()" style="background:rgba(40,200,80,0.1); border:1px solid #28c840; color:#28c840;">Ritorna al Menu</button></div></div>
 </div>
 
 <script>
@@ -159,14 +194,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const toastContainer = document.getElementById('toast-container');
   const mainMenu = document.getElementById('main-menu');
   
-  // Elementi del Tutorial
+  // Moduli ed Elementi DOC
+  const docModule = document.getElementById('doc-module');
+  const docFeedbackScreen = document.getElementById('doc-feedback-screen');
+  const btnDocHelp = document.getElementById('btn-doc-help');
+
+  // Modale Tutorial
   const ovTutorialStep = document.getElementById('ov-tutorial-step');
   const tutStepTag = document.getElementById('tut-step-tag');
   const tutStepTitle = document.getElementById('tut-step-title');
   const tutStepBody = document.getElementById('tut-step-body');
   const btnTutNext = document.getElementById('btn-tut-next');
 
-  let telemetry = { subTasks: 0, falseClicks: 0, hyperStates: 0, startTime: Date.now(), focusHistory: [] };
   let focusScore = 100;
   let audioCtx = null;
   let clickCount = 0; 
@@ -175,22 +214,19 @@ document.addEventListener('DOMContentLoaded', () => {
   let driftIntervals = {};
   let glitchFrequenceMultiplier = 1;
   
-  let gameStarted = false; 
-  let tutorialPhase = 0; // Stato del mini-tutorial interattivo
+  let currentActiveMode = null; // 'ADHD' o 'DOC'
+  let docLoopCounter = 0; // Contatore dei tentativi compulsivi nel DOC
+  let tutorialContext = null; // 'ADHD' o 'DOC'
 
-  const callers = ["Ufficio", "Capo Progetto", "Mamma", "Direzione", "Risorse Umane"];
-  const voicePhrases = ["Attenzione, serve subito la tua risposta sul file condiviso.", "Puoi collegarti un secondo in chiamata? Dobbiamo rifare la pianificazione."];
-  const wins = ['win-error', 'win-slack', 'win-cal', 'win-mail'];
-
-  // Generazione icone di sfondo
-  let referenceJunkIcon = null;
-  for (let i = 0; i < 45; i++) {
-    const isFolder = Math.random() > 0.5;
-    const icon = document.createElement('div');
-    icon.className = 'bg-icon';
-    icon.innerHTML = `<div class="bg-icon-visual ${isFolder ? 'folder' : 'pdf'}"></div><div class="bg-icon-text">junk_${i}.sys</div>`;
-    desktopGrid.appendChild(icon);
-    if (i === 12) referenceJunkIcon = icon; // Salviamo un'icona di riferimento per evidenziarla nel tutorial
+  // Popolamento icone spazzatura desktop
+  for (let i = 0; i < 40; i++) {
+    if (Math.random() > 0.4) {
+      const isFolder = Math.random() > 0.5;
+      const icon = document.createElement('div');
+      icon.className = 'bg-icon';
+      icon.innerHTML = `<div class="bg-icon-visual ${isFolder ? 'folder' : 'pdf'}"></div><div class="bg-icon-text">junk_${i}.sys</div>`;
+      desktopGrid.appendChild(icon);
+    }
   }
 
   function updateClock() {
@@ -222,25 +258,96 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => { gbar.style.display = 'none'; }, 60);
   }
 
+  // EVENTI SBLOCCO MENU INIZIALE
+  document.getElementById('btn-start-adhd').addEventListener('click', () => launchMode('ADHD'));
+  document.getElementById('btn-start-doc').addEventListener('click', () => launchMode('DOC'));
+  
+  document.getElementById('btn-tut-adhd').addEventListener('click', () => launchTutorial('ADHD'));
+  document.getElementById('btn-tut-doc').addEventListener('click', () => launchTutorial('DOC'));
+  document.getElementById('btn-close-tut').addEventListener('click', () => ovTutorialStep.classList.remove('active'));
+
+  function launchMode(mode) {
+    initAudio();
+    mainMenu.style.display = 'none';
+    currentActiveMode = mode;
+    
+    if (mode === 'ADHD') {
+      document.getElementById('hud-box').style.display = 'block';
+      document.querySelectorAll('.win').forEach(el => el.style.display = 'block');
+    } else if (mode === 'DOC') {
+      docModule.style.display = 'flex';
+      playSynthTone(180, 0.4, 'sine', 0.04);
+    }
+  }
+
+  // TUTORIAL LOGICA INTERATTIVA DIFFERENZIATA
+  function launchTutorial(context) {
+    tutorialContext = context;
+    ovTutorialStep.classList.add('active');
+    
+    if (context === 'ADHD') {
+      tutStepTag.textContent = "Guida modulo ADHD";
+      tutStepTitle.textContent = "Saturazione Attentiva e Fuga";
+      tutStepBody.textContent = "Nella simulazione ADHD le finestre cliniche scapperanno se indugi col mouse per più di 1.8 secondi. Inoltre, ogni 5 secondi, chiamate polifoniche concatenate si accumuleranno sullo schermo parlando a voce alta se rispondi.";
+    } else if (context === 'DOC') {
+      tutStepTag.textContent = "Guida modulo DOC";
+      tutStepTitle.textContent = "ObsessiveLoop ed Impossibilità di Uscita";
+      tutStepBody.textContent = "La simulazione DOC replica la logica ricorsiva del disturbo ossessivo-compulsivo. Le opzioni presentate dal loop falliscono sistematicamente, aumentando l'ansia. Solo reiterando l'azione emergerà la vera via clinica.";
+    }
+  }
+
+  btnTutNext.addEventListener('click', () => {
+    ovTutorialStep.classList.remove('active');
+    launchMode(tutorialContext);
+  });
+
+  // ENGINE LOGICA INTERATTIVA DOC (OBSESSIVELOOP)
+  docModule.addEventListener('click', (e) => {
+    const btn = e.target.closest('.doc-action-btn');
+    if (!btn) return;
+    
+    const type = btn.getAttribute('data-doc');
+    docLoopCounter++;
+    
+    playSynthTone(130, 0.15, 'sawtooth', 0.03);
+    glitchFlash();
+    
+    // Logica dinamica di feedback basata sulle opzioni del diagramma
+    if (type === 'ignora') {
+      docFeedbackScreen.innerHTML = `<span style="color:#ff5f57;">[Tentativo fallito]</span> Provi a distrarti ed ignorare il pensiero, ma l'ansia aumenta esponenzialmente in background. Il loop ricomincia.`;
+    } else if (type === 'respira') {
+      docFeedbackScreen.innerHTML = `<span style="color:#ff5f57;">[Tentativo fallito]</span> Esegui tecniche di respirazione, ma l'ansia non passa, la pressione interna cresce. Il pensiero torna.`;
+    } else if (type === 'procedi') {
+      docFeedbackScreen.innerHTML = `<span style="color:#ff5f57;">[Tentativo fallito]</span> Cerchi di andare avanti con le tue attività, ma il pensiero ossessivo si ripresenta. Eseguire il rituale diventa obbligatorio.`;
+    }
+
+    // Sblocco della quarta opzione latente terapeutica dopo 3 cicli completati
+    if (docLoopCounter >= 3) {
+      btnDocHelp.style.display = 'block';
+      hint.textContent = "Una nuova opzione estranea alle dinamiche del disturbo è apparsa.";
+    }
+  });
+
+  btnDocHelp.addEventListener('click', (e) => {
+    e.stopPropagation();
+    playSynthTone(440, 0.5, 'sine', 0.04);
+    document.getElementById('ov-doc-success').classList.add('active');
+  });
+
+  // ENGINE LOGICA ADHD (FINESTRE E CHIAMATE A 5 SECONDI)
   function makeWindowDrift(element, id) {
     if (driftIntervals[id]) return;
     driftIntervals[id] = setInterval(() => {
-      if (focusScore <= 0 || !gameStarted) return;
+      if (focusScore <= 0 || currentActiveMode !== 'ADHD') return;
       const maxX = window.innerWidth - element.offsetWidth - 30;
       const maxY = window.innerHeight - element.offsetHeight - 60;
       element.style.left = Math.max(20, Math.random() * maxX) + 'px';
       element.style.top = Math.max(40, Math.random() * maxY) + 'px';
-      if (Math.random() * 5 < glitchFrequenceMultiplier) glitchFlash();
-    }, 1900 + Math.random() * 900);
-  }
-
-  function startChaosMode() {
-    hint.textContent = "Le finestre si spostano — i pensieri fluttuano continuamente.";
-    wins.forEach(id => { const el = document.getElementById(id); if(el) makeWindowDrift(el, id); });
+    }, 2000 + Math.random() * 800);
   }
 
   window.openOverlay = function(id) {
-    if (!gameStarted) return;
+    if (currentActiveMode !== 'ADHD') return;
     document.getElementById(id).classList.add('active');
     glitchFrequenceMultiplier += 0.5;
   };
@@ -248,76 +355,23 @@ document.addEventListener('DOMContentLoaded', () => {
   window.closeOverlay = function(id) {
     document.getElementById(id).classList.remove('active');
     clickCount++;
-    if (clickCount >= 2) startChaosMode();
+    if (clickCount >= 2) {
+      hint.textContent = "Le finestre si spostano autonomamente — i pensieri fluttuano continuamente.";
+      wins.forEach(wid => { const el = document.getElementById(wid); if(el) makeWindowDrift(el, wid); });
+    }
   };
-
-  // LOGICA DEL TUTORIAL INTERATTIVO PROFESSIONALE
-  document.getElementById('btn-open-guide').addEventListener('click', () => {
-    mainMenu.style.display = 'none';
-    startInteractiveTutorial();
-  });
-
-  function startInteractiveTutorial() {
-    ovTutorialStep.classList.add('active');
-    tutorialPhase = 1;
-    runTutorialStep();
-  }
-
-  // Best Practice: Centralizzazione dello state machine del tutorial guidato
-  function runTutorialStep() {
-    // Resetta gli evidenziatori precedenti
-    document.querySelectorAll('.tutorial-highlight').forEach(el => el.classList.remove('tutorial-highlight'));
-    
-    if (tutorialPhase === 1) {
-      tutStepTag.textContent = "Fase 1 di 3";
-      tutStepTitle.textContent = "Il Desktop Frammentato (Falsi Positivi)";
-      tutStepBody.textContent = "Lo sfondo dello schermo riproduce un desktop ingombro. Cliccare sulle icone sottostanti per errore simula una distrazione periferica e drenerà la tua barra di Capacità Esecutiva. Nota l'elemento evidenziato.";
-      if(referenceJunkIcon) referenceJunkIcon.classList.add('tutorial-highlight');
-    } 
-    else if (tutorialPhase === 2) {
-      tutStepTag.textContent = "Fase 2 di 3";
-      tutStepTitle.textContent = "L'Instabilità dei Pensieri (Fuga da Indugio)";
-      tutStepBody.textContent = "Quando cerchi di concentrarti su un compito, l'indugio prolungato (1.8s) farà scattare via la finestra prima che tu possa cliccarla. Guarda la risorsa d'errore evidenziata: se ti avvicini troppo senza una traiettoria lineare, fuggirà.";
-      document.getElementById('win-error').classList.add('tutorial-highlight');
-    } 
-    else if (tutorialPhase === 3) {
-      tutStepTag.textContent = "Fase 3 di 3";
-      tutStepTitle.textContent = "Saturazione Multicanale (Accumulo Chiamate)";
-      tutStepBody.textContent = "Ogni 5 secondi, nuove chiamate Teams e WhatsApp compariranno sovrapponendosi a cascata. Se premi 'Rispondi', la finestra rimarrà attiva parlando a voce alta tramite Web Speech API per spezzare il tuo flusso cognitivo.";
-      btnTutNext.textContent = "AVVIA SIMULAZIONE REALE";
-    }
-  }
-
-  btnTutNext.addEventListener('click', () => {
-    if (tutorialPhase < 3) {
-      tutorialPhase++;
-      runTutorialStep();
-    } else {
-      // Chiusura del tutorial e lancio del gioco reale
-      ovTutorialStep.classList.remove('active');
-      document.querySelectorAll('.tutorial-highlight').forEach(el => el.classList.remove('tutorial-highlight'));
-      initAudio();
-      gameStarted = true;
-    }
-  });
-
-  document.getElementById('btn-start-game').addEventListener('click', () => {
-    initAudio();
-    mainMenu.style.display = 'none';
-    gameStarted = true;
-  });
 
   document.getElementById('win-error').addEventListener('click', () => openOverlay('ov-error'));
   document.getElementById('win-slack').addEventListener('click', () => openOverlay('ov-slack'));
   document.getElementById('win-cal').addEventListener('click', () => openOverlay('ov-cal'));
   document.getElementById('win-mail').addEventListener('click', () => openOverlay('ov-mail'));
 
-  // Logica Indugio (1.8s)
+  // Calcolo Indugio Mouse (1.8s) nella Fase 1 ADHD
   wins.forEach(id => {
     const el = document.getElementById(id);
     if (!el) return;
     el.addEventListener('mouseenter', () => {
-      if (clickCount >= 1 && clickCount < 2 && gameStarted) { 
+      if (clickCount >= 1 && clickCount < 2 && currentActiveMode === 'ADHD') { 
         hoverTimers[id] = setTimeout(() => {
           const maxX = window.innerWidth - el.offsetWidth - 30;
           const maxY = window.innerHeight - el.offsetHeight - 60;
@@ -332,18 +386,18 @@ document.addEventListener('DOMContentLoaded', () => {
   function createAudioRinger() {
     activeRingersCount++;
     let ringInterval = setInterval(() => {
-      if (focusScore <= 0 || !gameStarted) { clearInterval(ringInterval); return; }
+      if (focusScore <= 0 || currentActiveMode !== 'ADHD') { clearInterval(ringInterval); return; }
       playSynthTone(580 + (activeRingersCount * 12), 0.25, 'sine', 0.03);
     }, 1500);
     return ringInterval;
   }
 
-  // Loop delle chiamate a cascata (5 secondi)
+  // Ecosistema Chiamate Concorrenti a 5s accumulate
   setInterval(() => {
-    if (focusScore <= 0 || !gameStarted || document.querySelectorAll('.incoming-call-box').length > 6) return;
-    initAudio();
+    if (focusScore <= 0 || currentActiveMode !== 'ADHD' || document.querySelectorAll('.incoming-call-box').length > 5) return;
     const callElement = document.createElement('div');
     callElement.className = 'win incoming-call-box';
+    callElement.style.display = 'block';
     callElement.style.left = Math.random() * (window.innerWidth - 350) + 'px';
     callElement.style.top = Math.random() * (window.innerHeight - 220) + 'px';
     
@@ -380,7 +434,7 @@ document.addEventListener('DOMContentLoaded', () => {
         callElement.querySelector('.btn-dec').setAttribute('data-action', 'hangup');
 
         if ('speechSynthesis' in window) {
-          const utterance = new SpeechSynthesisUtterance(voicePhrases[Math.floor(Math.random() * voicePhrases.length)]);
+          const utterance = new SpeechSynthesisUtterance("Rilevato task concomitante urgente. Richiesta attenzione immediata.");
           utterance.lang = 'it-IT';
           utterance.onend = () => callElement.remove();
           window.speechSynthesis.speak(utterance);
@@ -394,12 +448,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     root.appendChild(callElement);
-    makeWindowDrift(callElement, 'call-' + Date.now());
+    if (clickCount >= 2) makeWindowDrift(callElement, 'call-' + Date.now());
   }, 5000);
 
-  // Consumo progressivo focus passivo
+  // Consumo progressivo passivo della riserva ADHD
   setInterval(() => {
-    if (focusScore > 0 && gameStarted) {
+    if (focusScore > 0 && currentActiveMode === 'ADHD') {
       focusScore = Math.max(0, focusScore - 0.4);
       focusFill.style.width = focusScore + '%';
       hudVal.textContent = Math.round(focusScore) + '%';
@@ -407,7 +461,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }, 250);
 
-  desktopGrid.addEventListener('click', () => { if(gameStarted) { focusScore = Math.max(0, focusScore - 5); glitchFlash(); } });
+  desktopGrid.addEventListener('click', () => { if(currentActiveMode === 'ADHD') { focusScore = Math.max(0, focusScore - 5); glitchFlash(); } });
 });
 </script>
 </body>
